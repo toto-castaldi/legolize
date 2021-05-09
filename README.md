@@ -12,7 +12,7 @@ pip install -r requirements.txt
 Execute
 
 ```
-LOG_LEVEL=DEBUG python src/main.py -f photos/byke.jpeg -w 50 -h 50
+LOG_LEVEL=DEBUG python src/main.py -f photos/smiling-emoji.jpg -w 50 -h 50
 ```
 
 ![source](photos/byke.jpeg)

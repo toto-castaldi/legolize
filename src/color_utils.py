@@ -28,3 +28,19 @@ def move(color, distance):
     b = limit(b, 0, 255)
     a = limit(a, 0, 255)
     return (r, g, b, a)
+
+def mean(image):
+    r = 0
+    g = 0
+    b = 0
+    a = 0
+    count = 0
+    for y in range(image.size[1]):
+        for x in range(image.size[0]):
+            pixel = image.getpixel((x, y))
+            r = r + pixel[0]
+            g = g + pixel[1]
+            b = b + pixel[2]
+            a = a + pixel[3] if len(pixel) > 3 else 255
+            count = count + 1
+    return (r // count, g // count, b // count, a // count)

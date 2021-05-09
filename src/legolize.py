@@ -1,5 +1,6 @@
 from PIL import Image
 import utils
+import color_utils
 
 logger = utils.init_log()
 
@@ -23,7 +24,9 @@ def load(image_file_name, w, h):
     for y in range(h // 2, image.size[1], h):
         new_x = 0
         for x in range(w // 2, image.size[0], w):
-            pixel = image.getpixel((x, y))
+            (left, upper, right, lower) = (x - w // 2, y - h // 2, x + w // 2, y + h // 2)
+            crop = image.crop((left, upper, right, lower))
+            pixel = color_utils.mean(crop)
             if new_x < new_size[0] and new_y < new_size[1]:
                 points.append(((new_x, new_y), pixel))
             new_x = new_x + 1

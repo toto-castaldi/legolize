@@ -26,10 +26,6 @@ def cli():
     if image_file_name is None:
         raise SystemExit(f"Usage: {sys.argv[0]} -f [image_file_name]")
 
-    #colorize lego points
-    image = image_utils.move_image_color("lego-point.png", color_utils.html_to_rgb("C91A09", 255))
-    image.save("lego-point-C91A09.png")
-
     #sampling
     logger.debug(f"{image_file_name} {w} {h}")
     lego_image = legolize.load(image_file_name, w, h)
