@@ -14,25 +14,23 @@ def create_image_with_pixel(lego_image):
     return new_image
 
 
-def create_image_with_image(lego_image):
-    pixel_to_image_x = 62
-    pixel_to_image_y = 62
-    palette = {}
+def create_image_with_image(lego_image, palette):
+    pixel_to_image_x = palette.image_size[0]
+    pixel_to_image_y = palette.image_size[1]
     new_image = Image.new(
         'RGB', (lego_image.new_size[0] * pixel_to_image_x, lego_image.new_size[1] * pixel_to_image_y))
-    count = 0
+    count = 1
+    rgbs = palette.rgbs
+    l = len(lego_image.points)
+    utils.printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
     for p in lego_image.points:
         position = p[0]
         color = p[1]
-        if color in palette.keys():
-            pixel_image = palette[color]
-            logger.info("color exists !!!")
-        else:
-            pixel_image = image_utils.move_image_color("lego-point.png", color)
-            palette[color] = pixel_image
+
+        the_color_palette = color_utils.nearest(rgbs, color)
+        pixel_image = palette.image_palette(the_color_palette)
         
-        logger.info(f"palette size {len(palette)}")
-        logger.info(f"{count} on {len(lego_image.points)}")
+        utils.printProgressBar(count, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
 
         pixel_image_dimension_x = pixel_image.size[0]
         pixel_image_dimension_y = pixel_image.size[1]

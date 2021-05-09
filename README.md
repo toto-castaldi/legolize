@@ -16,9 +16,9 @@ LOG_LEVEL=DEBUG python src/main.py -f photos/smiling-emoji.jpg -w 50 -h 50
 ```
 
 ![source](photos/byke.jpeg)
-![dest](byke-output.png?ver=1)
+![dest](byke-output.png?ver=2)
 
 
 ### Greetings
 
-[Lego Color from Rebrickable](https://rebrickable.com/downloads/)
+[Lego Colors from Rebrickable](https://rebrickable.com/downloads/)

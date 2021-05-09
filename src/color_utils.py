@@ -1,3 +1,6 @@
+import math
+
+
 def html_to_rgb(html_code, alpha=None):
     r = int(html_code[0:2], 16)
     g = int(html_code[2:4], 16)
@@ -6,6 +9,7 @@ def html_to_rgb(html_code, alpha=None):
 
     return (r, g, b, a)
 
+
 def distance(colorA, colorB):
     a = 255
     if len(colorA) > 3 and len(colorB) > 3:
@@ -13,10 +17,16 @@ def distance(colorA, colorB):
 
     return (colorA[0] - colorB[0], colorA[1] - colorB[1], colorA[2] - colorB[2], a)
 
+
+def vector_distance(colorA, colorB):
+    d = distance(colorA, colorB)
+    return math.sqrt(d[0] ** 2 + d[1] ** 2 + d[2] ** 2)
+
 def limit(i, min, max):
     i = i if i > 0 else 0
     i = i if i < 256 else 255
     return i
+
 
 def move(color, distance):
     r = color[0] + distance[0]
@@ -28,6 +38,7 @@ def move(color, distance):
     b = limit(b, 0, 255)
     a = limit(a, 0, 255)
     return (r, g, b, a)
+
 
 def mean(image):
     r = 0
@@ -44,3 +55,14 @@ def mean(image):
             a = a + pixel[3] if len(pixel) > 3 else 255
             count = count + 1
     return (r // count, g // count, b // count, a // count)
+
+
+def nearest(colors, color):
+    result = None
+    min_dist = None
+    for c in colors:
+        d = vector_distance(c, color)
+        if min_dist is None or d < min_dist:
+            min_dist = d
+            result = c
+    return result
