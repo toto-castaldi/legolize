@@ -3,34 +3,12 @@
     <h1>Legolize</h1>
     <div class="row show-grid">
       <div class="col-12">
-        <fieldset>
-          <legend>Load image</legend>
-          <div class="mb-3">
-            <label for="file" class="form-label">Select file</label>
-            <input
-              type="file"
-              id="file"
-              ref="file"
-              v-on:change="handleFileUpload()"
-            />
-          </div>
-          <button
-            type="submit"
-            v-on:click="submitFile()"
-            class="btn btn-primary"
-          >
-            load
-          </button>
-        </fieldset>
+        <upload-image />
       </div>
     </div>
     <div class="row show-grid justify-content-between">
       <div class="col-5">
-        <img
-          class="img-fluid"
-          alt="input"
-          src="https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Input"
-        />
+        <input-image />
       </div>
       <div class="col-5">
         <img
@@ -39,45 +17,34 @@
           src="https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Output"
         />
       </div>
+      {{ name }}
     </div>
   </div>
 </template>
 
 <script>
-import { setUrl, postFormData } from './store/helpers';
+import { setUrl } from '@/store/helpers';
+import { eventBus } from '@/store/eventBus';
+import UploadImage from '@/components/UploadImage.vue'
+import InputImage from './components/InputImage.vue';
 
 export default {
+  components: { UploadImage, InputImage },
   data() {
     return {
-      file: "",
-    };
+      name : 'toto'
+    }
   },
-
   async created() {
     const configRes = await fetch("config.json").catch(e => console.error('error', e));
     const configJson = await configRes.json();
     setUrl(configJson.api_url.value);
-  },
 
-  methods: {
-    async submitFile() {
-      let formData = new FormData();
-      formData.append("file", this.file);
-
-      const res = await postFormData(`upload`, {
-        formData
-      });
-
-      const json = await res.json();
-
-      console.log(json);
-    },
-
-    handleFileUpload() {
-      this.file = this.$refs.file.files[0];
-    },
-  },
+    eventBus.$on('loaded', uid => this.name = uid);
+  }
 };
+
+
 </script>
 
 <style scoped>

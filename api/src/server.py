@@ -1,21 +1,24 @@
 from flask import Flask, request, make_response
 from flask_cors import CORS
 import os
+import uuid
 
 app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = 'UPLOAD_FOLDER'
 
-os.makedirs(UPLOAD_FOLDER)
+os.makedirs(UPLOAD_FOLDER, exist_ok = True)
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    file = request.files['file']
-    filename = file.filename
-    file.save(os.path.join('UPLOAD_FOLDER', filename))
+    uid = str(uuid.uuid4())
 
-    return make_response({}, 200)
+    file = request.files['file']
+    
+    file.save(os.path.join('UPLOAD_FOLDER', uid))
+
+    return make_response({ 'uid' : uid}, 200)
 
 
 if __name__ == '__main__':
