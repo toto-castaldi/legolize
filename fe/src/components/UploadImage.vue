@@ -39,8 +39,6 @@ export default {
 
       const json = await res.json();
 
-      console.log(json);
-      
       eventBus.$emit('loaded', json.uid);
 
     },

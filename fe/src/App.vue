@@ -11,11 +11,7 @@
         <input-image />
       </div>
       <div class="col-5">
-        <img
-          class="img-fluid"
-          alt="input"
-          src="https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Output"
-        />
+        <output-image />
       </div>
     </div>
   </div>
@@ -25,9 +21,10 @@
 import { setUrl } from '@/store/helpers';
 import UploadImage from '@/components/UploadImage.vue'
 import InputImage from './components/InputImage.vue';
+import OutputImage from './components/OutputImage.vue';
 
 export default {
-  components: { UploadImage, InputImage },
+  components: { UploadImage, InputImage, OutputImage },
   data() {
     return {
     }
@@ -36,7 +33,6 @@ export default {
     const configRes = await fetch("config.json").catch(e => console.error('error', e));
     const configJson = await configRes.json();
     setUrl(configJson.api_url.value);
-
   }
 };
 
