@@ -6,7 +6,7 @@ import utils
 import image_utils
 import color_utils
 import image_output
-from multiprocessing import Process
+import multiprocessing
 import legolize
 import palette
 import csv
@@ -18,8 +18,6 @@ CORS(app)
 TMP_FOLDER = os.environ['UPLOAD_FOLDER']
 os.makedirs(TMP_FOLDER, exist_ok=True)
 processes = {}
-w = 20
-h = 20
 
 pal = palette.Palette()
 with open("20210509-rebrickable-colors.csv") as csvfile:
@@ -39,13 +37,13 @@ def thumb_name(uid):
 def output_name(uid):
     return os.path.join(TMP_FOLDER, f"{uid}-output.png")
 
-def lego(uid):
-    lego_image = legolize.load(input_name(uid), w, h)
+def lego(uid, precision):
+    lego_image = legolize.load(input_name(uid), precision, precision)
     image = image_output.create_image_with_image(lego_image, pal)
     image.save(output_name(uid))
 
-@app.route('/upload', methods=['POST'])
-def upload():
+@app.route('/upload/<precision>', methods=['POST'])
+def upload(precision):
     uid = str(uuid.uuid4())
 
     file = request.files['file']
@@ -55,9 +53,9 @@ def upload():
     image = image_utils.image_thumbnail(input_name(uid))
     image.save(thumb_name(uid))
 
-    p = Process(target=lego, args=(uid,))
+    p = multiprocessing.Process(target=lego, args=(uid,110 - int(precision),)) #110 from FE
     p.start()
-    p.join()
+    #p.join()
     processes[uid] = p
 
     return make_response({'uid': uid}, 200)
@@ -82,4 +80,5 @@ def outputcheck(uid):
 
 
 if __name__ == '__main__':
+    multiprocessing.set_start_method('spawn')
     app.run(port=5000, debug=True)
