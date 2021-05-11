@@ -4,6 +4,8 @@ export const setUrl = (url) => {
     serverUrl = url + (url.endsWith('/') ? '' : '/');
 }
 
+export const apiInputImage = (uid) => `${serverUrl}input/${uid}`;
+
 export const get = async(url) => {
     const res = await fetch(`${serverUrl}${url}`, {
         method: 'GET'

@@ -17,14 +17,12 @@
           src="https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Output"
         />
       </div>
-      {{ name }}
     </div>
   </div>
 </template>
 
 <script>
 import { setUrl } from '@/store/helpers';
-import { eventBus } from '@/store/eventBus';
 import UploadImage from '@/components/UploadImage.vue'
 import InputImage from './components/InputImage.vue';
 
@@ -32,7 +30,6 @@ export default {
   components: { UploadImage, InputImage },
   data() {
     return {
-      name : 'toto'
     }
   },
   async created() {
@@ -40,7 +37,6 @@ export default {
     const configJson = await configRes.json();
     setUrl(configJson.api_url.value);
 
-    eventBus.$on('loaded', uid => this.name = uid);
   }
 };
 

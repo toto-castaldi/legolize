@@ -34,7 +34,7 @@ npm run serve
 
 ```
 pip install -r requirements.txt
-LOG_LEVEL=DEBUG python src/server.py
+UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER LOG_LEVEL=DEBUG python src/server.py
 ```
 
 ### Greetings
