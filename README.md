@@ -30,6 +30,12 @@ npm install
 npm run serve
 ```
 
+### Api
+
+```
+pip install -r requirements.txt
+LOG_LEVEL=DEBUG python src/server.py
+```
 
 ### Greetings
 

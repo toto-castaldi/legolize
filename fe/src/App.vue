@@ -3,16 +3,25 @@
     <h1>Legolize</h1>
     <div class="row show-grid">
       <div class="col-12">
-        <form>
-          <fieldset>
-            <legend>Load image</legend>
-            <div class="mb-3">
-              <label for="fileInput" class="form-label">Select file</label>
-              <input type="file" id="fileInput" />
-            </div>
-            <button type="submit" class="btn btn-primary">load</button>
-          </fieldset>
-        </form>
+        <fieldset>
+          <legend>Load image</legend>
+          <div class="mb-3">
+            <label for="file" class="form-label">Select file</label>
+            <input
+              type="file"
+              id="file"
+              ref="file"
+              v-on:change="handleFileUpload()"
+            />
+          </div>
+          <button
+            type="submit"
+            v-on:click="submitFile()"
+            class="btn btn-primary"
+          >
+            load
+          </button>
+        </fieldset>
       </div>
     </div>
     <div class="row show-grid justify-content-between">
@@ -35,11 +44,37 @@
 </template>
 
 <script>
+import { setUrl, postFormData } from './store/helpers';
+
 export default {
-  name: "App",
+  data() {
+    return {
+      file: "",
+    };
+  },
+
+  async created() {
+    const configRes = await fetch("config.json").catch(e => console.error('error', e));
+    const configJson = await configRes.json();
+    setUrl(configJson.api_url.value);
+  },
+
   methods: {
-    inputFile() {
-      console.log("aaaa!");
+    async submitFile() {
+      let formData = new FormData();
+      formData.append("file", this.file);
+
+      const res = await postFormData(`upload`, {
+        formData
+      });
+
+      const json = await res.json();
+
+      console.log(json);
+    },
+
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
     },
   },
 };
