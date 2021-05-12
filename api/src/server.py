@@ -78,7 +78,8 @@ def outputcheck(uid):
 
     return make_response({'finished': finished}, 200)
 
-
 if __name__ == '__main__':
     multiprocessing.set_start_method('spawn')
-    app.run(port=5000, debug=True)
+    logger.info("flask booting up")
+    app.run(port=5000)
+    logger.info("flask up")
