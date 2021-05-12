@@ -40,7 +40,7 @@ while True:
                     precision_str = f.read()
                 os.remove(cup_name)
                 precision = int(precision_str.strip())
-                logger.debug(f"{f}, {precision}")
+                logger.debug(f"{uid}, {precision}")
                 lego(uid, precision)
 
     except Exception:
