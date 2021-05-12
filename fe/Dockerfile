@@ -6,8 +6,8 @@ WORKDIR /app
 COPY ./src/ ./src/
 COPY ./public/ ./public/
 COPY vue.config.js ./
-COPY .eslintrc.js ./
-COPY .browserslistrc ./
+#COPY .eslintrc.js ./
+#COPY .browserslistrc ./
 COPY babel.config.js ./
 COPY package.json ./
 COPY package-lock.json ./

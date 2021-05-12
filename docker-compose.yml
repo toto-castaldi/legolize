@@ -1,0 +1,16 @@
+version: '3'
+services:
+  engine:
+    image : "skillbillsrl/legolize-engine:${TAG}"
+    volumes: 
+      - /tmp/f:/tmp/UPLOAD_FOLDER
+  api:
+    image : "skillbillsrl/legolize-api:${TAG}"
+    ports:
+      - "5000:5000"
+    volumes: 
+      - /tmp/f:/tmp/UPLOAD_FOLDER
+  fe:
+    image : "skillbillsrl/legolize-fe:${TAG}"
+    ports:
+      - "80:80"
