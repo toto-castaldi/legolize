@@ -1,6 +1,7 @@
 from PIL import Image
 import logging
 import os
+import ntpath
 
 LOG_LEVELS = {
     'INFO': 20,
@@ -11,8 +12,32 @@ LOG_LEVELS = {
 }
 
 log_level = LOG_LEVELS.get(os.environ.get('LOG_LEVEL', 'INFO'))
-
 logger_handler = False
+
+TMP_FOLDER = os.environ['UPLOAD_FOLDER']
+os.makedirs(TMP_FOLDER, exist_ok=True)
+
+def input_name(uid):
+    return os.path.join(TMP_FOLDER, f"{uid}-input")
+
+def seed(file):
+    res = None
+    base_name = ntpath.basename(file)
+    if '-' in base_name:
+        res = base_name[0:base_name.rfind('-')]
+    return res
+
+def is_input_file(file):
+    return file.endswith("-input")
+
+def cup_name(uid):
+    return os.path.join(TMP_FOLDER, f"{uid}-cup")
+
+def thumb_name(uid):
+    return os.path.join(TMP_FOLDER, f"{uid}-thumb.png")
+
+def output_name(uid):
+    return os.path.join(TMP_FOLDER, f"{uid}-output.png")
 
 
 def init_log():

@@ -59,7 +59,7 @@ export default {
     },
 
     handlePrecision() {
-      this.precision = this.$refs.precision.value;
+      this.precision = 110 - this.$refs.precision.value;
     },
   },
 };

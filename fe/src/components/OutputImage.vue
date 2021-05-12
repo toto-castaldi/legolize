@@ -32,7 +32,7 @@ export default {
     eventBus.$on('loaded', uid => {
       this.imageSrc = "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading....",
       this.uid = uid;
-      this.checkInterval = setInterval(this.checkOutputFinish, 1000)
+      this.checkInterval = setInterval(this.checkOutputFinish, 3000)
     });
   }
 

@@ -33,8 +33,17 @@ npm run serve
 ### Api
 
 ```
+cd application
 pip install -r requirements.txt
-UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER LOG_LEVEL=DEBUG python src/server.py
+UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER HOST=127.0.0.1 LOG_LEVEL=DEBUG python src/server.py
+```
+
+### Engine
+
+```
+cd application
+pip install -r requirements.txt
+UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER LOG_LEVEL=DEBUG python src/engine.py
 ```
 
 ### Greetings

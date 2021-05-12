@@ -1,0 +1,17 @@
+FROM python:3.9.5-buster
+
+WORKDIR /app
+
+COPY ./requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+ENV UPLOAD_FOLDER=/tmp/UPLOAD_FOLDER
+ENV LOG_LEVEL=DEBUG
+
+COPY ./src ./src
+COPY ./*.csv ./
+COPY ./*.png ./
+
+CMD ["python",\
+ "src/engine.py"\
+]
