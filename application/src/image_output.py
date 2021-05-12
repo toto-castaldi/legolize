@@ -22,7 +22,6 @@ def create_image_with_image(lego_image, palette):
     count = 1
     rgbs = palette.rgbs
     l = len(lego_image.points)
-    utils.printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
     for p in lego_image.points:
         position = p[0]
         color = p[1]
@@ -30,7 +29,7 @@ def create_image_with_image(lego_image, palette):
         the_color_palette = color_utils.nearest(rgbs, color)
         pixel_image = palette.image_palette(the_color_palette)
         
-        utils.printProgressBar(count, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
+        logger.info(f"{count}/{l}")
 
         pixel_image_dimension_x = pixel_image.size[0]
         pixel_image_dimension_y = pixel_image.size[1]
