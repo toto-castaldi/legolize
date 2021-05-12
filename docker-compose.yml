@@ -12,5 +12,7 @@ services:
       - /tmp/f:/tmp/UPLOAD_FOLDER
   fe:
     image : "skillbillsrl/legolize-fe:${TAG}"
+    volumes: 
+      - /config/config-front-end.json:/config.json
     ports:
       - "80:80"

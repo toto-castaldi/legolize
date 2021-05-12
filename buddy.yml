@@ -57,7 +57,7 @@
     type: "SSH_COMMAND"
     working_directory: "${WORKDIR}"
     login: "root"
-    host: "${TEST_SERVER_NAME}"
+    host: "${SERVER_NAME}"
     port: "22"
     env_key: "prod_rsa"
     authentication_mode: "ENV_KEY"
