@@ -5,6 +5,8 @@ LEGOLIZE
 
 # WHAT ID DOES
 
+[demo](http://legolize.skillbill.net)
+
 ![source](byke-input.jpeg)
 ![dest](byke-output.png?ver=2)
 
