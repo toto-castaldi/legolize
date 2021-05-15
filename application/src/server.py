@@ -10,9 +10,10 @@ logger = utils.init_log()
 app = Flask(__name__)
 CORS(app)
 HOST = os.environ['HOST']
+DEBUG = os.environ.get('DEBUG', 'False')
 
-@app.route('/upload/<precision>', methods=['POST'])
-def upload(precision):
+@app.route('/upload', methods=['POST'])
+def upload():
     uid = str(uuid.uuid4())
 
     file = request.files['file']
@@ -22,11 +23,17 @@ def upload(precision):
     image = image_utils.image_thumbnail(utils.input_name(uid))
     image.save(utils.thumb_name(uid))
 
-    cup = open(utils.cup_name(uid), "a")
-    cup.write(precision)
-    cup.close()
-
     logger.debug(f"saved {utils.thumb_name(uid)}")
+
+    return make_response({'uid': uid}, 200)
+
+@app.route('/generate', methods=['POST'])
+def generate():
+    size = request.json['size']
+    uid = request.json['uid']
+    cup = open(utils.cup_name(uid), "a")
+    cup.write(str(size))
+    cup.close()
 
     return make_response({'uid': uid}, 200)
 
@@ -50,4 +57,4 @@ def outputcheck(uid):
 
 if __name__ == '__main__':
     logger.info("flask booting up")
-    app.run(port=5000, host=HOST)
+    app.run(port=5000, debug=DEBUG == 'True', host=HOST)

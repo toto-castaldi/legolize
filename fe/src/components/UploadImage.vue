@@ -8,21 +8,10 @@
         id="file"
         ref="file"
         v-on:change="handleFileUpload()"
+        :disabled="!current"
       />
     </div>
-    <div class="mb-3">
-      <input
-        type="range"
-        min="10"
-        max="100"
-        value="50"
-        class="slider"
-        id="precision"
-        ref="precision"
-        v-on:change="handlePrecision()"
-      />
-    </div>
-    <button type="submit" v-on:click="submitFile()" class="btn btn-primary">
+    <button type="submit" :disabled="file.length == 0 || !current" @click="submitFile()" class="btn btn-primary">
       load
     </button>
   </fieldset>
@@ -33,10 +22,10 @@ import { postFormData } from "@/store/helpers";
 import { eventBus } from "@/store/eventBus";
 
 export default {
+  props : ['current'],
   data() {
     return {
-      file: "",
-      precision: 10
+      file: ""
     };
   },
 
@@ -45,7 +34,7 @@ export default {
       let formData = new FormData();
       formData.append("file", this.file);
 
-      const res = await postFormData(`upload/${this.precision}`, {
+      const res = await postFormData(`upload`, {
         formData,
       });
 

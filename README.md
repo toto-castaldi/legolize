@@ -39,7 +39,7 @@ npm run serve
 ```
 cd application
 pip install -r requirements.txt
-UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER HOST=127.0.0.1 LOG_LEVEL=DEBUG python src/server.py
+DEBUG=True UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER HOST=127.0.0.1 LOG_LEVEL=DEBUG python src/server.py
 ```
 
 ### Engine
