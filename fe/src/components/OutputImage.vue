@@ -38,6 +38,7 @@ export default {
       if (this.checkInterval > -1) {
         clearInterval(this.checkInterval);
       }
+      this.imageSrc = "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading";
       eventBus.$emit("back", {});
     },
     async checkOutputFinish() {

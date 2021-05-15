@@ -35,7 +35,10 @@ def generate():
     cup_file_name = utils.cup_name(uid)
     if os.path.exists(cup_file_name):
         os.remove(cup_file_name)
-        
+
+    if os.path.exists(utils.output_name(uid)):
+        os.remove(utils.output_name(uid))
+
     cup = open(cup_file_name, "a")
     cup.write(str(size))
     cup.close()
