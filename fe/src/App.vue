@@ -50,6 +50,9 @@ export default {
 
     eventBus.$on('next', () => {
       this.step ++;
+      setTimeout(() => {
+        window.scrollTo(0,document.body.scrollHeight);
+      }, 0)
     });
   }
 };

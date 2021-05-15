@@ -8,6 +8,8 @@ export const apiInputImage = (uid) => `${serverUrl}input/${uid}`;
 
 export const apiOutpuImage = (uid) => `${serverUrl}output/${uid}?rnd=${Math.random()}`;
 
+export const apiPointsImage = (uid) => `${serverUrl}points/${uid}?rnd=${Math.random()}`;
+
 export const get = async(url) => {
     const res = await fetch(`${serverUrl}${url}`, {
         method: 'GET'

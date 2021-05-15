@@ -6,7 +6,7 @@ import legolize
 import palette
 import csv
 import color_utils
-import image_output
+import output
 from PIL import Image
 from os import listdir
 from os.path import isfile, join
@@ -34,8 +34,10 @@ def lego(uid, size):
     step = max_len // size
 
     lego_image = legolize.load_from_image(image, step, step)
-    image = image_output.create_image_with_image(lego_image, pal)
+    image = output.create_image_with_image(lego_image, pal)
     image.save(output_file_name)
+
+    output.create_file(lego_image, pal, utils.point_name(uid))
 
 
 while True:

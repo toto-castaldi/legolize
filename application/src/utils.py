@@ -20,6 +20,9 @@ os.makedirs(TMP_FOLDER, exist_ok=True)
 def input_name(uid):
     return os.path.join(TMP_FOLDER, f"{uid}-input")
 
+def point_name(uid):
+    return os.path.join(TMP_FOLDER, f"{uid}-points")
+
 def seed(file):
     res = None
     base_name = ntpath.basename(file)

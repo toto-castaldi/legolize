@@ -2,6 +2,8 @@
   <div>
     <legend>Result</legend>
     <div class="mb-3">
+      <a v-if="imagePoints.length > 0" :href="imagePoints" target="new">points file</a>
+      <p></p>
       <img class="img-fluid" alt="input" :src="imageSrc" />
     </div>
     <div class="row">
@@ -20,9 +22,8 @@
 </template>
 
 <script>
-import { get, apiOutpuImage } from "@/store/helpers";
+import { get, apiOutpuImage, apiPointsImage } from "@/store/helpers";
 import { eventBus } from "@/store/eventBus";
-
 
 export default {
   props: ["uid", "current"],
@@ -31,6 +32,7 @@ export default {
       imageSrc:
         "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading",
       checkInterval: -1,
+      imagePoints: "",
     };
   },
   methods: {
@@ -38,7 +40,9 @@ export default {
       if (this.checkInterval > -1) {
         clearInterval(this.checkInterval);
       }
-      this.imageSrc = "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading";
+      this.imageSrc =
+        "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading";
+      this.imagePoints = ""
       eventBus.$emit("back", {});
     },
     async checkOutputFinish() {
@@ -47,6 +51,7 @@ export default {
       if (json.finished) {
         clearInterval(this.checkInterval);
         this.imageSrc = apiOutpuImage(this.uid);
+        this.imagePoints = apiPointsImage(this.uid);
       }
     },
   },

@@ -38,6 +38,8 @@ def generate():
 
     if os.path.exists(utils.output_name(uid)):
         os.remove(utils.output_name(uid))
+    if os.path.exists(utils.point_name(uid)):
+        os.remove(utils.point_name(uid))
 
     cup = open(cup_file_name, "a")
     cup.write(str(size))
@@ -55,6 +57,14 @@ def output(uid):
     name = utils.output_name(uid)
     if os.path.exists(name):
         return send_file(name, mimetype='image/png')
+    else:
+        return make_response({}, 404)
+
+@app.route('/points/<uid>', methods=['GET'])
+def points(uid):
+    name = utils.point_name(uid)
+    if os.path.exists(name):
+        return send_file(name, mimetype='text/plain')
     else:
         return make_response({}, 404)
 

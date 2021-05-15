@@ -41,3 +41,24 @@ def create_image_with_image(lego_image, palette):
                     (new_x, new_y), pixel_image.getpixel((x, y)))
         count = count + 1
     return new_image
+
+def create_file(lego_image, palette, file_name):
+    f = open(file_name, "a")
+    
+    count = 1
+    rgbs = palette.rgbs
+    l = len(lego_image.points)
+    for p in lego_image.points:
+        position = p[0]
+        color = p[1]
+
+        the_color_palette = color_utils.nearest(rgbs, color)
+        
+        logger.info(f"{count}/{l}")
+
+        f.write(f"{position} - {the_color_palette[0]}\n")
+        
+        count = count + 1
+
+    f.close()
+    return f
