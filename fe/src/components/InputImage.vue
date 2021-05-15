@@ -7,6 +7,8 @@
     <div class="mb-3">
       <label for="size" class="form-label">Select size</label>
       <select id="size" name="size" ref="size" v-on:change="handleSize()">
+        <option value="10">10</option>
+        <option value="20">20</option>
         <option value="30">30</option>
         <option value="40">40</option>
         <option value="50">50</option>
@@ -55,7 +57,7 @@ export default {
   data() {
     return {
       imageSrc: apiInputImage(this.uid),
-      size: 30,
+      size: 10,
     };
   },
 };

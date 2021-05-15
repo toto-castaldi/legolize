@@ -7,6 +7,7 @@ import palette
 import csv
 import color_utils
 import image_output
+from PIL import Image
 from os import listdir
 from os.path import isfile, join
 
@@ -21,10 +22,20 @@ with open("20210509-rebrickable-colors.csv") as csvfile:
         
 logger.info(f"palette loaded of {len(pal.colors)} colors")
 
-def lego(uid, precision):
-    lego_image = legolize.load(utils.input_name(uid), precision, precision)
+def lego(uid, size):
+    output_file_name = utils.output_name(uid)
+
+    if os.path.exists(output_file_name):
+        os.remove(output_file_name)
+
+    image_file = utils.input_name(uid)
+    image = Image.open(image_file)
+    max_len = image.size[0] if image.size[0] > image.size[1] else image.size[1]
+    step = max_len // size
+
+    lego_image = legolize.load_from_image(image, step, step)
     image = image_output.create_image_with_image(lego_image, pal)
-    image.save(utils.output_name(uid))
+    image.save(output_file_name)
 
 
 while True:
@@ -35,13 +46,13 @@ while True:
             uid = utils.seed(f)
             cup_name = utils.cup_name(uid)
             if utils.is_input_file(f) and os.path.exists(cup_name):
-                precision_str = ""
+                size_str = ""
                 with open(cup_name) as f:
-                    precision_str = f.read()
+                    size_str = f.read()
                 os.remove(cup_name)
-                precision = int(precision_str.strip())
-                logger.debug(f"{uid}, {precision}")
-                lego(uid, precision)
+                size = int(size_str.strip())
+                logger.debug(f"{uid}, {size}")
+                lego(uid, size)
 
     except Exception:
         traceback.print_exc()

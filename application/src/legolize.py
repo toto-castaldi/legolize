@@ -14,8 +14,12 @@ class Lego_Image:
         self.points = points
 
 
-def load(image_file_name, w, h):
+def load_from_file(image_file_name, w, h):
     image = Image.open(image_file_name)
+    return load_from_image(image, w, h)
+
+
+def load_from_image(image, w, h):
     logger.debug(f"{image.format}, {image.size}, {image.mode}")
     new_size = (image.size[0] // w, image.size[1] // h)
     logger.debug(f"new size {new_size}")

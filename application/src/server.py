@@ -31,7 +31,12 @@ def upload():
 def generate():
     size = request.json['size']
     uid = request.json['uid']
-    cup = open(utils.cup_name(uid), "a")
+
+    cup_file_name = utils.cup_name(uid)
+    if os.path.exists(cup_file_name):
+        os.remove(cup_file_name)
+        
+    cup = open(cup_file_name, "a")
     cup.write(str(size))
     cup.close()
 
