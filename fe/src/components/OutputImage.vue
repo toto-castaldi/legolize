@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:class="{ 'bg-light': current }" class="mb-3" >
     <legend>Result</legend>
     <div class="mb-3">
       <a v-if="imagePoints.length > 0" :href="imagePoints" target="new">points file</a>

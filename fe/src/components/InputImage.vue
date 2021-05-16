@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:class="{ 'bg-light': current }" class="mb-3" >
     <legend>Choose size</legend>
     <div class="mb-3">
       <img class="" alt="input" :src="imageSrc" />
