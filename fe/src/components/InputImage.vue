@@ -2,11 +2,11 @@
   <div v-bind:class="{ 'bg-light': current }" class="mb-3" >
     <legend>Choose size</legend>
     <div class="mb-3">
-      <img class="" alt="input" :src="imageSrc" />
+      <img alt="input" :src="imageSrc" />
     </div>
     <div class="mb-3">
       <label for="size" class="form-label">Select size</label>
-      <select id="size" name="size" ref="size" v-on:change="handleSize()">
+      <select :disabled="!current" id="size" name="size" ref="size" v-on:change="handleSize()">
         <option value="10">10</option>
         <option value="20">20</option>
         <option value="30">30</option>
