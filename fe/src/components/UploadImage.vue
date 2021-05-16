@@ -1,5 +1,5 @@
 <template>
-  <fieldset>
+  <div v-bind:class="{ 'bg-light': current }" class="mb-3" >
     <legend>Load image</legend>
     <div class="mb-3">
       <label for="file" class="form-label">Select file</label>
@@ -14,7 +14,7 @@
     <button type="submit" :disabled="file.length == 0 || !current" @click="submitFile()" class="btn btn-primary">
       load
     </button>
-  </fieldset>
+  </div>
 </template>
 
 <script>
