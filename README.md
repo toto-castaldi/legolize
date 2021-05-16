@@ -77,6 +77,33 @@ curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compo
 chmod +x /usr/local/bin/docker-compose
 ```
 
+## HTTPS
+
+```
+apt-get update
+apt-get install nginx
+snap install --classic certbot 
+certbot --nginx 
+vi /etc/nginx/sites-enabled/default 
+#HTTPS CONF
+nginx -t && nginx -s reload
+```
+
+### HTTPS CONF
+
+```
+location / {
+    proxy_pass http://127.0.0.1:8080;
+    add_header Cache-Control 'must-revalidate, proxy-revalidate, max-age=0';
+}
+
+location /api {
+    rewrite ^/api/(.*)$ /$1 break;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass http://127.0.0.1:5000;
+}
+```
+
 ### Greetings
 
 [Lego Colors from Rebrickable](https://rebrickable.com/downloads/)
