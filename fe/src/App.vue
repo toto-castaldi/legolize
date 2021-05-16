@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div class="d-flex flex-column h-100">
     <nav-bar />
     <div class="container">
       <div v-if="this.step >= 1" class="row">
