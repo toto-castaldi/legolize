@@ -1,5 +1,7 @@
 version: '3'
 services:
+  redis:
+    image : "redis:5.0.12"
   engine:
     image : "skillbillsrl/legolize-engine:${TAG}"
     volumes: 

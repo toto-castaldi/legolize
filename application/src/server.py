@@ -2,6 +2,7 @@ from flask import Flask, request, make_response, send_file
 from flask_cors import CORS
 import os
 import uuid
+import redis
 import utils
 import image_utils
 
@@ -11,6 +12,9 @@ app = Flask(__name__)
 CORS(app)
 HOST = os.environ['HOST']
 DEBUG = os.environ.get('DEBUG', 'False')
+redis_url = os.environ.get("REDIS", "")
+storage_redis = redis.Redis.from_url(redis_url, decode_responses=True)
+
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -31,6 +35,8 @@ def upload():
 def generate():
     size = request.json['size']
     uid = request.json['uid']
+
+    storage_redis.delete(uid)
 
     cup_file_name = utils.cup_name(uid)
     if os.path.exists(cup_file_name):
@@ -71,7 +77,8 @@ def points(uid):
 @app.route('/outputcheck/<uid>', methods=['GET'])
 def outputcheck(uid):
     name = utils.output_name(uid)
-    return make_response({'finished': os.path.exists(name)}, 200)
+    progress = storage_redis.get(uid)
+    return make_response({'finished': os.path.exists(name), 'progress' : progress}, 200)
 
 if __name__ == '__main__':
     logger.info("flask booting up")

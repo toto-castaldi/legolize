@@ -52,6 +52,12 @@ export default {
         clearInterval(this.checkInterval);
         this.imageSrc = apiOutpuImage(this.uid);
         this.imagePoints = apiPointsImage(this.uid);
+      } else {
+        const p = json.progress;
+        if (p && p != 'null') {
+          this.imageSrc =
+          `https://fakeimg.pl/440x230/333333/eae0d0/?retina=1&text=${json.progress} %&rnd=${Math.random()}`;
+        }
       }
     },
   },

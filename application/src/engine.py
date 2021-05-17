@@ -7,11 +7,16 @@ import palette
 import csv
 import color_utils
 import output
+import redis
+import math
 from PIL import Image
 from os import listdir
 from os.path import isfile, join
 
+redis_url = os.environ.get("REDIS", "")
 logger = utils.init_log()
+time_to_expire_s = 2 * 3600
+storage_redis = redis.Redis.from_url(redis_url, decode_responses=True)
 
 pal = palette.Palette()
 with open("20210509-rebrickable-colors.csv") as csvfile:
@@ -21,6 +26,11 @@ with open("20210509-rebrickable-colors.csv") as csvfile:
         pal.add_color(row[0], row[1], color_utils.html_to_rgb(row[2], 255), 't' == row[3])
         
 logger.info(f"palette loaded of {len(pal.colors)} colors")
+
+def progress(uid):
+    def set_progess(count, total):
+        storage_redis.set(uid, math.ceil(count / total * 100), ex=time_to_expire_s)
+    return set_progess
 
 def lego(uid, size):
     output_file_name = utils.output_name(uid)
@@ -34,10 +44,8 @@ def lego(uid, size):
     step = max_len // size
 
     lego_image = legolize.load_from_image(image, step, step)
-    image = output.create_image_with_image(lego_image, pal)
+    image = output.create(lego_image, pal, utils.point_name(uid), progress(uid))
     image.save(output_file_name)
-
-    output.create_file(lego_image, pal, utils.point_name(uid))
 
 
 while True:
