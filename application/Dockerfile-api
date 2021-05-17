@@ -11,8 +11,9 @@ ENV HOST=0.0.0.0
 ENV REDIS=redis://redis:6379
 
 COPY ./src ./src
+COPY ./gunicorn.sh ./
 
 EXPOSE 5000
-CMD ["python",\
- "src/server.py"\
-]
+
+ENTRYPOINT ["./gunicorn.sh"]
+
