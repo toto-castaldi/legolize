@@ -103,16 +103,20 @@ export default {
           break;
         }  
         case 'end' : {
-          console.log(this.palette);
           this.state = 'Lego points';
-          /* for (const p of this.paletteRects) {
-            const id = p.id;
+          const ctx = getCtx();
+          console.log(this.tileDimension, this.tileDimension / 62);
+          ctx.scale(this.tileDimension / 62, this.tileDimension / 62);
+          for (const p of this.paletteRects) {
+            const paletteId = p.paletteId;
             const x = p.x;
             const y = p.y;
-            if (imagePalete[id] === undefined) {
-              console.log(id,x,y)
-            }
-          } */
+            const image = new Image();
+            image.onload = () => {
+              ctx.drawImage(image, x * 62 , y * 62);
+            };
+            image.src = "data:image/png;base64," + this.palette[paletteId];
+          } 
           
           break;
         }  

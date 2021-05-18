@@ -3,7 +3,6 @@ from flask_cors import CORS
 from flask_sock import Sock
 import os
 import uuid
-import redis
 import utils
 import image_utils
 import json
@@ -23,8 +22,6 @@ app = Flask(__name__)
 CORS(app)
 HOST = os.environ['HOST']
 DEBUG = os.environ.get('DEBUG', 'False')
-redis_url = os.environ.get("REDIS", "")
-storage_redis = redis.Redis.from_url(redis_url, decode_responses=True)
 sock = Sock(app)
 
 pal = palette.Palette()
@@ -109,8 +106,6 @@ def generate():
     size = request.json['size']
     uid = request.json['uid']
 
-    storage_redis.delete(uid)
-
     cup_file_name = utils.cup_name(uid)
     if os.path.exists(cup_file_name):
         os.remove(cup_file_name)
@@ -146,12 +141,6 @@ def points(uid):
         return send_file(name, mimetype='text/plain')
     else:
         return make_response({}, 404)
-
-@app.route('/outputcheck/<uid>', methods=['GET'])
-def outputcheck(uid):
-    name = utils.output_name(uid)
-    progress = storage_redis.get(uid)
-    return make_response({'finished': os.path.exists(name), 'progress' : progress}, 200)
 
 if __name__ == '__main__':
     logger.info("flask booting up")

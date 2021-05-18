@@ -17,19 +17,6 @@
     trigger_condition_paths:
     - "/application"
     trigger_condition: "ON_CHANGE_AT_PATH"
-  - action: "[ENGINE] Build Docker image"
-    type: "DOCKERFILE"
-    login: "${DOCKER_HUB_USER}"
-    password: "${DOCKER_HUB_PASSWORD}"
-    docker_image_tag: "latest"
-    dockerfile_path: "application/Dockerfile-engine"
-    context_path: "application/"
-    repository: "skillbillsrl/legolize-engine"
-    build_args:
-    - "version=${BUDDY_EXECUTION_REVISION}"
-    trigger_condition_paths:
-    - "/application"
-    trigger_condition: "ON_CHANGE_AT_PATH"
   - action: "[FE] Build Docker image"
     type: "DOCKERFILE"
     login: "${DOCKER_HUB_USER}"
