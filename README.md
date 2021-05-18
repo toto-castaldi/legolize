@@ -26,11 +26,6 @@ npm --version
 
 Developed with python version 3.8.7
 
-### Redis
-
-```
-docker run --rm --name legolize-redis -p 6379:6379 redis:5.0.12
-```
 
 ### Fe
 
@@ -45,17 +40,8 @@ npm run serve
 ```
 cd application
 pip install -r requirements.txt
-REDIS=redis://localhost:6379 DEBUG=True UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER HOST=127.0.0.1 LOG_LEVEL=DEBUG python src/server.py
+DEBUG=True UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER HOST=127.0.0.1 LOG_LEVEL=DEBUG python src/server.py
 ```
-
-### Engine
-
-```
-cd application
-pip install -r requirements.txt
-REDIS=redis://localhost:6379 UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER LOG_LEVEL=DEBUG python src/engine.py
-```
-
 
 # CLOUD SERVER
 
