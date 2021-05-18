@@ -58,11 +58,11 @@ export default {
     };
 
     this.connection.onmessage = (event) => {
-      if (this.dimension == undefined) {
-        this.dimension = JSON.parse(event.data);
-      } else {
-        const el = JSON.parse(event.data);
-        document.getElementById(`${el.x+1}-${el.y+1}`).style.backgroundColor = `rgba(${el.color[0]},${el.color[1]},${el.color[2]},${el.color[3]})`;
+      const eventData = JSON.parse(event.data);
+      switch (eventData.action) {
+        case 'size' : this.dimension = eventData; break;
+        case 'point' : document.getElementById(`${eventData.x+1}-${eventData.y+1}`).style.backgroundColor = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`; break;
+        case 'palette' : document.getElementById(`${eventData.x+1}-${eventData.y+1}`).style.backgroundColor = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`; break;
       }
     };
   },

@@ -43,3 +43,15 @@ def load(image, w, h, generating_events):
         new_y = new_y + 1
 
     return Lego_Image(w, h, image.size, new_size, points)
+
+def apply_palette(lego_image, palette, generating_events):
+    rgbs = palette.rgbs
+
+    for p in lego_image.points:
+        position = p[0]
+        color = p[1]
+
+        the_color_palette = color_utils.nearest(rgbs, color)
+        
+        generating_events['apply_palette']((position, the_color_palette))
+
