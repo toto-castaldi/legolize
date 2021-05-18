@@ -1,10 +1,20 @@
 from flask import Flask, request, make_response, send_file
 from flask_cors import CORS
+from flask_sock import Sock
 import os
 import uuid
-import redis
 import utils
 import image_utils
+import json
+from PIL import Image
+import color_utils
+import traceback
+import legolize
+import time
+import palette
+import csv
+import base64
+from io import BytesIO
 
 
 logger = utils.init_log()
@@ -12,9 +22,16 @@ app = Flask(__name__)
 CORS(app)
 HOST = os.environ['HOST']
 DEBUG = os.environ.get('DEBUG', 'False')
-redis_url = os.environ.get("REDIS", "")
-storage_redis = redis.Redis.from_url(redis_url, decode_responses=True)
+sock = Sock(app)
 
+pal = palette.Palette()
+with open("20210509-rebrickable-colors.csv") as csvfile:
+    csv_reader = csv.reader(csvfile)
+    for row in csv_reader:
+        logger.debug(row[2])
+        pal.add_color(row[0], row[1], color_utils.html_to_rgb(row[2], 255), 't' == row[3])
+        
+logger.info(f"palette loaded of {len(pal.colors)} colors")
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -31,12 +48,63 @@ def upload():
 
     return make_response({'uid': uid}, 200)
 
+@sock.route('/fullgenerate')
+def full_gen(ws):
+    while True:
+        try:
+            req_json = json.loads(ws.receive())
+
+            uid = req_json['uid']
+            size = int(req_json['size'])
+
+            logger.debug(f"uid {uid} size {size}")
+
+            image = legolize.image(utils.input_name(uid))
+
+            max_len = legolize.max_len(image)
+
+            logger.debug(f"max_len {max_len}")
+
+            step = max_len // size
+
+            def generating_events_new_size(new_size):
+                ws.send(json.dumps({'action' : 'size', 'w': new_size[0], 'h': new_size[1]}))
+
+            def generating_events_point(point):
+                ws.send(json.dumps({'action' : 'point', 'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
+
+            def generating_events_palette(point):
+                try:
+                    buffered = BytesIO()
+                    image = point[2]
+                    image.save(buffered, format='PNG')
+                    img_str = base64.b64encode(buffered.getvalue()).decode('ascii')
+                    ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3], 'palette_img' : img_str}))
+                except Exception:
+                    traceback.print_exc()
+
+            generating_events = {}
+            generating_events['new_size'] = generating_events_new_size
+            generating_events['point'] = generating_events_point
+            generating_events['apply_palette'] = generating_events_palette
+
+            lego_image = legolize.load(image, step, step, generating_events)
+
+            legolize.apply_palette(lego_image, pal, generating_events)
+
+            ws.send(json.dumps({'action' : 'end'}))
+
+        except simple_websocket.ws.ConnectionClosed:
+            pass
+        except Exception:
+            traceback.print_exc()
+
+        
+
 @app.route('/generate', methods=['POST'])
 def generate():
     size = request.json['size']
     uid = request.json['uid']
-
-    storage_redis.delete(uid)
 
     cup_file_name = utils.cup_name(uid)
     if os.path.exists(cup_file_name):
@@ -73,12 +141,6 @@ def points(uid):
         return send_file(name, mimetype='text/plain')
     else:
         return make_response({}, 404)
-
-@app.route('/outputcheck/<uid>', methods=['GET'])
-def outputcheck(uid):
-    name = utils.output_name(uid)
-    progress = storage_redis.get(uid)
-    return make_response({'finished': os.path.exists(name), 'progress' : progress}, 200)
 
 if __name__ == '__main__':
     logger.info("flask booting up")

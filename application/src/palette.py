@@ -18,3 +18,6 @@ class Palette:
 
     def image_palette(self, color):
         return self.colors[color][3]
+
+    def id_palette(self, color):
+        return self.colors[color][0]

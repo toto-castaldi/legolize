@@ -35,7 +35,6 @@
 
 <script>
 import { apiInputImage } from "@/store/helpers";
-import { post } from "@/store/helpers";
 import { eventBus } from "@/store/eventBus";
 
 export default {
@@ -45,10 +44,7 @@ export default {
       eventBus.$emit("back", {});
     },
     async next() {
-      await post(`generate`, {
-        body: { size: this.size, uid: this.uid },
-      });
-      eventBus.$emit("next");
+      eventBus.$emit("generate", { size: this.size });
     },
     handleSize() {
       this.size = this.$refs.size.value;

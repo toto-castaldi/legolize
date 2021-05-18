@@ -1,10 +1,9 @@
 <template>
-  <div v-bind:class="{ 'bg-light': current }" class="mb-3" >
-    <legend>Result</legend>
-    <div class="mb-3">
-      <a v-if="imagePoints.length > 0" :href="imagePoints" target="new">points file</a>
-      <p></p>
-      <img class="img-fluid" alt="input" :src="imageSrc" />
+  <div v-bind:class="{ 'bg-light': current }" class="mb-3">
+    <legend>Result : {{state}}</legend>
+    <div id="canvas-container" class="mb-3" >
+      <canvas id="the-canvas" >
+      </canvas>
     </div>
     <div class="row">
       <div class="col">
@@ -22,47 +21,113 @@
 </template>
 
 <script>
-import { get, apiOutpuImage, apiPointsImage } from "@/store/helpers";
+import { websocketUrl } from "@/store/helpers";
 import { eventBus } from "@/store/eventBus";
 
 export default {
-  props: ["uid", "current"],
+  props: ["uid", "current", "size"],
   data() {
     return {
-      imageSrc:
-        "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading",
-      checkInterval: -1,
-      imagePoints: "",
+      state : 'Loading',
+      connection: undefined,
+      paletteRects : [],
+      tileDimension : 8,
+      palette : {}
     };
   },
   methods: {
     back() {
-      if (this.checkInterval > -1) {
-        clearInterval(this.checkInterval);
+      if (this.connection) {
+        this.connection.close();
       }
-      this.imageSrc =
-        "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading";
-      this.imagePoints = ""
       eventBus.$emit("back", {});
     },
-    async checkOutputFinish() {
-      const res = await get(`outputcheck/${this.uid}`);
-      const json = await res.json();
-      if (json.finished) {
-        clearInterval(this.checkInterval);
-        this.imageSrc = apiOutpuImage(this.uid);
-        this.imagePoints = apiPointsImage(this.uid);
-      } else {
-        const p = json.progress;
-        if (p && p != 'null') {
-          this.imageSrc =
-          `https://fakeimg.pl/440x230/333333/eae0d0/?retina=1&text=${json.progress} %&rnd=${Math.random()}`;
-        }
-      }
+    startGeneration: function () {
+      this.connection.send(JSON.stringify({ uid: this.uid, size: this.size }));
     },
   },
+  destroyed() {
+    if (this.connection) {
+      this.connection.close();
+    }
+  },
   created() {
-    this.checkInterval = setInterval(this.checkOutputFinish, 3000);
+    this.connection = new WebSocket(websocketUrl("fullgenerate"));
+
+    this.connection.onopen = () => {
+      this.startGeneration();
+    };
+
+    this.connection.onmessage =  (event) => {
+      const getCtx = () => {
+        const canvas = document.getElementById('the-canvas');
+        return canvas.getContext('2d');
+      }
+
+     
+      const eventData = JSON.parse(event.data);
+      switch (eventData.action) {
+        case 'size' : {
+          this.state = 'Dimension';
+
+          const canvas = document.getElementById('the-canvas');
+          
+          const tileY = canvas.clientHeight / eventData.h;
+          const tileX = canvas.clientWidth / eventData.w;
+
+          canvas.height = canvas.clientHeight;
+          canvas.width = canvas.clientWidth;
+
+          if (tileX < tileY) {
+            this.tileDimension = Math.floor(tileX);
+          } else {
+            this.tileDimension = Math.floor(tileY);
+          }
+
+          break;
+        }
+        case 'point' : {
+          this.state = 'Clusterization';
+          const ctx = getCtx();
+          ctx.fillStyle = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`;
+          ctx.fillRect(eventData.x * this.tileDimension, eventData.y * this.tileDimension, this.tileDimension, this.tileDimension);
+          break;
+        }
+        case 'palette' : {
+          this.state = 'Apply palette';
+          const ctx = getCtx();
+          ctx.fillStyle = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`;
+          ctx.fillRect(eventData.x * this.tileDimension, eventData.y * this.tileDimension, this.tileDimension, this.tileDimension);
+          this.paletteRects.push({ x : eventData.x, y: eventData.y, paletteId : eventData.palette_id });
+          this.palette[eventData.palette_id] = eventData.palette_img;
+          break;
+        }  
+        case 'end' : {
+          this.state = 'Lego points';
+          const ctx = getCtx();
+          console.log(this.tileDimension, this.tileDimension / 62);
+          ctx.scale(this.tileDimension / 62, this.tileDimension / 62);
+          for (const p of this.paletteRects) {
+            const paletteId = p.paletteId;
+            const x = p.x;
+            const y = p.y;
+            const image = new Image();
+            image.onload = () => {
+              ctx.drawImage(image, x * 62 , y * 62);
+            };
+            image.src = "data:image/png;base64," + this.palette[paletteId];
+          } 
+          
+          break;
+        }  
+      }
+    };
   },
 };
 </script>
+<style scoped>
+canvas {
+	height: 100%; 
+  width: 100%;
+}
+</style>

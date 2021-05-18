@@ -1,8 +1,12 @@
 let serverUrl = "";
+let wsUrl = "";
 
-export const setUrl = (url) => {
-    serverUrl = url + (url.endsWith('/') ? '' : '/');
+export const setUrl = (config) => {
+    serverUrl = config.api_url + (config.api_url.endsWith('/') ? '' : '/');
+    wsUrl = config.ws_url + (config.ws_url.endsWith('/') ? '' : '/');
 }
+
+export const websocketUrl = (res) => `${wsUrl}${res}`;
 
 export const apiInputImage = (uid) => `${serverUrl}input/${uid}`;
 
