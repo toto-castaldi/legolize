@@ -9,7 +9,7 @@
     login: "${DOCKER_HUB_USER}"
     password: "${DOCKER_HUB_PASSWORD}"
     docker_image_tag: "latest"
-    dockerfile_path: "application/Dockerfile-api"
+    dockerfile_path: "application/Dockerfile"
     context_path: "application/"
     repository: "skillbillsrl/legolize-api"
     build_args:
