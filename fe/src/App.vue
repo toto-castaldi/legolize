@@ -15,7 +15,7 @@
       </div>
       <div v-if="step >= 3" class="row">
         <div class="col-12">
-          <output-image v-bind:uid="uid" v-bind:current="step == 3" />
+          <output-image v-bind:uid="uid" v-bind:size="size" v-bind:current="step == 3" />
         </div>
       </div>
     </div>
@@ -37,6 +37,7 @@ export default {
   data() {
     return {
       uid: undefined,
+      size: 10,
       step: 1,
     };
   },
@@ -45,7 +46,7 @@ export default {
       console.error("error", e)
     );
     const configJson = await configRes.json();
-    setUrl(configJson.api_url.value);
+    setUrl(configJson);
 
     eventBus.$on("loaded", (uid) => {
       this.uid = uid;
@@ -58,9 +59,11 @@ export default {
 
     eventBus.$on("next", () => {
       this.step++;
-      setTimeout(() => {
-        window.scrollTo(0, document.body.scrollHeight);
-      }, 0);
+    });
+
+    eventBus.$on("generate", ({ size }) => {
+      this.step++;
+      this.size = size;
     });
   },
 };

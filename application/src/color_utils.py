@@ -1,4 +1,5 @@
 import math
+from traceback import print_stack
 
 
 def html_to_rgb(html_code, alpha=None):
@@ -52,7 +53,7 @@ def mean(image):
             r = r + pixel[0]
             g = g + pixel[1]
             b = b + pixel[2]
-            a = a + pixel[3] if len(pixel) > 3 else 255
+            a = a + (pixel[3] if len(pixel) > 3 else 255)
             count = count + 1
     return (r // count, g // count, b // count, a // count)
 

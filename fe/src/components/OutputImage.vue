@@ -1,10 +1,11 @@
 <template>
-  <div v-bind:class="{ 'bg-light': current }" class="mb-3" >
+  <div v-bind:class="{ 'bg-light': current }" class="mb-3">
     <legend>Result</legend>
-    <div class="mb-3">
-      <a v-if="imagePoints.length > 0" :href="imagePoints" target="new">points file</a>
-      <p></p>
-      <img class="img-fluid" alt="input" :src="imageSrc" />
+    <div class="mb-3" v-if="dimension">
+      <div class="row" v-for="y in dimension['h']" :key="y">
+        <div :id="x + '-' + y" class="el" v-for="x in dimension['w']" :key="x">
+        </div>
+      </div>
     </div>
     <div class="row">
       <div class="col">
@@ -22,47 +23,56 @@
 </template>
 
 <script>
-import { get, apiOutpuImage, apiPointsImage } from "@/store/helpers";
+import { websocketUrl } from "@/store/helpers";
 import { eventBus } from "@/store/eventBus";
 
 export default {
-  props: ["uid", "current"],
+  props: ["uid", "current", "size"],
   data() {
     return {
-      imageSrc:
-        "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading",
-      checkInterval: -1,
-      imagePoints: "",
+      connection: undefined,
+      dimension: undefined,
     };
   },
   methods: {
     back() {
-      if (this.checkInterval > -1) {
-        clearInterval(this.checkInterval);
+      if (this.connection) {
+        this.connection.close();
       }
-      this.imageSrc =
-        "https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Loading";
-      this.imagePoints = ""
       eventBus.$emit("back", {});
     },
-    async checkOutputFinish() {
-      const res = await get(`outputcheck/${this.uid}`);
-      const json = await res.json();
-      if (json.finished) {
-        clearInterval(this.checkInterval);
-        this.imageSrc = apiOutpuImage(this.uid);
-        this.imagePoints = apiPointsImage(this.uid);
-      } else {
-        const p = json.progress;
-        if (p && p != 'null') {
-          this.imageSrc =
-          `https://fakeimg.pl/440x230/333333/eae0d0/?retina=1&text=${json.progress} %&rnd=${Math.random()}`;
-        }
-      }
+    startGeneration: function () {
+      this.connection.send(JSON.stringify({ uid: this.uid, size: this.size }));
     },
   },
+  destroyed() {
+    if (this.connection) {
+      this.connection.close();
+    }
+  },
   created() {
-    this.checkInterval = setInterval(this.checkOutputFinish, 3000);
+    this.connection = new WebSocket(websocketUrl("fullgenerate"));
+
+    this.connection.onopen = () => {
+      this.startGeneration();
+    };
+
+    this.connection.onmessage = (event) => {
+      if (this.dimension == undefined) {
+        this.dimension = JSON.parse(event.data);
+      } else {
+        const el = JSON.parse(event.data);
+        document.getElementById(`${el.x+1}-${el.y+1}`).style.backgroundColor = `rgba(${el.color[0]},${el.color[1]},${el.color[2]},${el.color[3]})`;
+      }
+    };
   },
 };
 </script>
+<style scoped>
+div.el {
+  border: 1px solid black;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+</style>

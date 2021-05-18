@@ -1,10 +1,16 @@
 from flask import Flask, request, make_response, send_file
 from flask_cors import CORS
+from flask_sock import Sock
 import os
 import uuid
 import redis
 import utils
 import image_utils
+import json
+from PIL import Image
+import color_utils
+import traceback
+import legolize
 
 
 logger = utils.init_log()
@@ -14,7 +20,7 @@ HOST = os.environ['HOST']
 DEBUG = os.environ.get('DEBUG', 'False')
 redis_url = os.environ.get("REDIS", "")
 storage_redis = redis.Redis.from_url(redis_url, decode_responses=True)
-
+sock = Sock(app)
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -30,6 +36,44 @@ def upload():
     logger.debug(f"saved {utils.thumb_name(uid)}")
 
     return make_response({'uid': uid}, 200)
+
+@sock.route('/fullgenerate')
+def full_gen(ws):
+    while True:
+        try:
+            req_json = json.loads(ws.receive())
+
+            uid = req_json['uid']
+            size = int(req_json['size'])
+
+            logger.debug(f"uid {uid} size {size}")
+
+            image = legolize.image(utils.input_name(uid))
+
+            max_len = legolize.max_len(image)
+
+            logger.debug(f"max_len {max_len}")
+
+            step = max_len // size
+
+            def generating_events_new_size(new_size):
+                ws.send(json.dumps({'w': new_size[0], 'h': new_size[1]}))
+
+            def generating_events_point(point):
+                ws.send(json.dumps({'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
+
+            generating_events = {}
+            generating_events['new_size'] = generating_events_new_size
+            generating_events['point'] = generating_events_point
+
+            legolize.load(image, step, step, generating_events)
+
+        except simple_websocket.ws.ConnectionClosed:
+            pass
+        except Exception:
+            traceback.print_exc()
+
+        
 
 @app.route('/generate', methods=['POST'])
 def generate():
