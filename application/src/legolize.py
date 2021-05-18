@@ -52,5 +52,5 @@ def apply_palette(lego_image, palette, generating_events):
 
         the_color_palette = color_utils.nearest(rgbs, color)
         
-        generating_events['apply_palette']((position, the_color_palette))
+        generating_events['apply_palette']((position, the_color_palette, palette.image_palette(the_color_palette), palette.id_palette(the_color_palette)))
 

@@ -14,6 +14,8 @@ import legolize
 import time
 import palette
 import csv
+import base64
+from io import BytesIO
 
 
 logger = utils.init_log()
@@ -75,7 +77,14 @@ def full_gen(ws):
                 ws.send(json.dumps({'action' : 'point', 'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
 
             def generating_events_palette(point):
-                ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
+                try:
+                    buffered = BytesIO()
+                    image = point[2]
+                    image.save(buffered, format='PNG')
+                    img_str = base64.b64encode(buffered.getvalue()).decode('ascii')
+                    ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3], 'palette_img' : img_str}))
+                except Exception:
+                    traceback.print_exc()
 
             generating_events = {}
             generating_events['new_size'] = generating_events_new_size
@@ -85,6 +94,8 @@ def full_gen(ws):
             lego_image = legolize.load(image, step, step, generating_events)
 
             legolize.apply_palette(lego_image, pal, generating_events)
+
+            ws.send(json.dumps({'action' : 'end'}))
 
         except simple_websocket.ws.ConnectionClosed:
             pass

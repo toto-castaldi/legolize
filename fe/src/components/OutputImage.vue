@@ -1,8 +1,8 @@
 <template>
   <div v-bind:class="{ 'bg-light': current }" class="mb-3">
     <legend>Result : {{state}}</legend>
-    <div class="mb-3" v-if="dimension">
-      <canvas id="the-canvas" v-bind:width="dimension['w']*64" v-bind:height="dimension['h']*64">
+    <div id="canvas-container" class="mb-3" >
+      <canvas id="the-canvas" >
       </canvas>
     </div>
     <div class="row">
@@ -30,7 +30,9 @@ export default {
     return {
       state : 'Loading',
       connection: undefined,
-      dimension: undefined,
+      paletteRects : [],
+      tileDimension : 8,
+      palette : {}
     };
   },
   methods: {
@@ -56,31 +58,62 @@ export default {
       this.startGeneration();
     };
 
-    this.connection.onmessage = (event) => {
+    this.connection.onmessage =  (event) => {
       const getCtx = () => {
         const canvas = document.getElementById('the-canvas');
         return canvas.getContext('2d');
       }
-      
+
+     
       const eventData = JSON.parse(event.data);
       switch (eventData.action) {
         case 'size' : {
           this.state = 'Dimension';
-          this.dimension = eventData; 
+
+          const canvas = document.getElementById('the-canvas');
+          
+          const tileY = canvas.clientHeight / eventData.h;
+          const tileX = canvas.clientWidth / eventData.w;
+
+          canvas.height = canvas.clientHeight;
+          canvas.width = canvas.clientWidth;
+
+          if (tileX < tileY) {
+            this.tileDimension = Math.floor(tileX);
+          } else {
+            this.tileDimension = Math.floor(tileY);
+          }
+
           break;
         }
         case 'point' : {
           this.state = 'Clusterization';
           const ctx = getCtx();
           ctx.fillStyle = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`;
-          ctx.fillRect(eventData.x * 64, eventData.y * 64, 64, 64);
+          ctx.fillRect(eventData.x * this.tileDimension, eventData.y * this.tileDimension, this.tileDimension, this.tileDimension);
           break;
         }
         case 'palette' : {
           this.state = 'Apply palette';
           const ctx = getCtx();
           ctx.fillStyle = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`;
-          ctx.fillRect(eventData.x * 64, eventData.y * 64, 64, 64);
+          ctx.fillRect(eventData.x * this.tileDimension, eventData.y * this.tileDimension, this.tileDimension, this.tileDimension);
+          this.paletteRects.push({ x : eventData.x, y: eventData.y, paletteId : eventData.palette_id });
+          this.palette[eventData.palette_id] = eventData.palette_img;
+          break;
+        }  
+        case 'end' : {
+          console.log(this.palette);
+          this.state = 'Lego points';
+          /* for (const p of this.paletteRects) {
+            const id = p.id;
+            const x = p.x;
+            const y = p.y;
+            if (imagePalete[id] === undefined) {
+              console.log(id,x,y)
+            }
+          } */
+          
           break;
         }  
       }
@@ -89,13 +122,8 @@ export default {
 };
 </script>
 <style scoped>
-div.el {
-  border: 1px solid black;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-}
 canvas {
-  border: 1px solid black;
+	height: 100%; 
+  width: 100%;
 }
 </style>
