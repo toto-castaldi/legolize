@@ -21,7 +21,6 @@ def max_len(image):
     return image.size[0] if image.size[0] > image.size[1] else image.size[1]
 
 def load(image, w, h, generating_events):
-    logger.debug("aaaaa")
     logger.debug(f"{image.format}, {image.size}, {image.mode}")
     
     new_size = (image.size[0] // w, image.size[1] // h)

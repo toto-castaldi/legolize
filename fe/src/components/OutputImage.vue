@@ -1,11 +1,9 @@
 <template>
   <div v-bind:class="{ 'bg-light': current }" class="mb-3">
-    <legend>Result</legend>
+    <legend>Result : {{state}}</legend>
     <div class="mb-3" v-if="dimension">
-      <div class="row" v-for="y in dimension['h']" :key="y">
-        <div :id="x + '-' + y" class="el" v-for="x in dimension['w']" :key="x">
-        </div>
-      </div>
+      <canvas id="the-canvas" v-bind:width="dimension['w']*64" v-bind:height="dimension['h']*64">
+      </canvas>
     </div>
     <div class="row">
       <div class="col">
@@ -30,6 +28,7 @@ export default {
   props: ["uid", "current", "size"],
   data() {
     return {
+      state : 'Loading',
       connection: undefined,
       dimension: undefined,
     };
@@ -58,11 +57,32 @@ export default {
     };
 
     this.connection.onmessage = (event) => {
+      const getCtx = () => {
+        const canvas = document.getElementById('the-canvas');
+        return canvas.getContext('2d');
+      }
+      
       const eventData = JSON.parse(event.data);
       switch (eventData.action) {
-        case 'size' : this.dimension = eventData; break;
-        case 'point' : document.getElementById(`${eventData.x+1}-${eventData.y+1}`).style.backgroundColor = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`; break;
-        case 'palette' : document.getElementById(`${eventData.x+1}-${eventData.y+1}`).style.backgroundColor = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`; break;
+        case 'size' : {
+          this.state = 'Dimension';
+          this.dimension = eventData; 
+          break;
+        }
+        case 'point' : {
+          this.state = 'Clusterization';
+          const ctx = getCtx();
+          ctx.fillStyle = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`;
+          ctx.fillRect(eventData.x * 64, eventData.y * 64, 64, 64);
+          break;
+        }
+        case 'palette' : {
+          this.state = 'Apply palette';
+          const ctx = getCtx();
+          ctx.fillStyle = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`;
+          ctx.fillRect(eventData.x * 64, eventData.y * 64, 64, 64);
+          break;
+        }  
       }
     };
   },
@@ -74,5 +94,8 @@ div.el {
   display: inline-block;
   width: 20px;
   height: 20px;
+}
+canvas {
+  border: 1px solid black;
 }
 </style>
