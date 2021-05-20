@@ -2,8 +2,12 @@ from traceback import print_stack
 from PIL import Image
 import utils
 import color_utils
+import os
+import importlib
 
 logger = utils.init_log()
+
+pieces_impl =  importlib.import_module(os.environ.get("PIECES_IMPL", "vanilla"))
 
 class Lego_Image:
     def __init__(self, w, h, original_size, new_size, points):
@@ -28,11 +32,10 @@ class Lego_Image:
             generating_events['apply_palette']((position, the_color_palette, palette.image_palette(the_color_palette), palette.id_palette(the_color_palette)))
 
     def pieces(self, generating_events):
-        g_e_pieces = generating_events['pieces'] if generating_events is not None and 'pieces' in generating_events else None
-        for p in self.points_on_palette:
-            #vanilla !!!!
-            if g_e_pieces:
-                g_e_pieces(p[0], (1,1), p[2])
+        ps = pieces_impl.pieces(self.points_on_palette)
+        for p in ps:
+            generating_events['pieces'](p[0], p[1], p[2])
+        
                         
         
 
