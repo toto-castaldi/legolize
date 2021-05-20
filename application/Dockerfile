@@ -18,5 +18,5 @@ COPY ./gunicorn.sh ./
 
 EXPOSE 5000
 
-ENTRYPOINT ["./gunicorn.sh"]
+ENTRYPOINT ["./start.sh"]
 

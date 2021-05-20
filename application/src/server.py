@@ -30,7 +30,7 @@ with open("20210509-rebrickable-colors.csv") as csvfile:
     csv_reader = csv.reader(csvfile)
     for row in csv_reader:
         logger.debug(row[2])
-        pal.add_color(row[0], row[1], color_utils.html_to_rgb(row[2], 255), 't' == row[3])
+        pal.add_color(int(row[0]) + 1, row[1], color_utils.html_to_rgb(row[2], 255), 't' == row[3])
         
 logger.info(f"palette loaded of {len(pal.colors)} colors")
 
@@ -102,7 +102,7 @@ def full_gen(ws):
 
             ws.send(json.dumps({'action' : 'endPalette'}))
 
-            lego_image.pieces(generating_events)          
+            lego_image.pieces(pal, generating_events)          
 
             ws.send(json.dumps({'action' : 'endPiece'}))
         except simple_websocket.ws.ConnectionClosed:

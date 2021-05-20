@@ -6,6 +6,7 @@ services:
       - "5000:5000"
     volumes: 
       - /tmp/f:/tmp/UPLOAD_FOLDER
+      - /root/modules:/app/modules
   fe:
     image : "skillbillsrl/legolize-fe:${TAG}"
     volumes: 

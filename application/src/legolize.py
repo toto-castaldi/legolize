@@ -4,6 +4,7 @@ import utils
 import color_utils
 import os
 import importlib
+from time import sleep
 
 logger = utils.init_log()
 
@@ -27,18 +28,29 @@ class Lego_Image:
 
             the_color_palette = color_utils.nearest(rgbs, color)
 
-            self.points_on_palette.append((position, color, the_color_palette))
+            id_palette = palette.id_palette(the_color_palette)
+
+            self.points_on_palette.append((position, color, the_color_palette, id_palette))
             
-            generating_events['apply_palette']((position, the_color_palette, palette.image_palette(the_color_palette), palette.id_palette(the_color_palette)))
+            generating_events['apply_palette']((position, the_color_palette, palette.image_palette(the_color_palette), id_palette))
 
-    def pieces(self, generating_events):
-        ps = pieces_impl.pieces(self.points_on_palette)
-        for p in ps:
-            generating_events['pieces'](p[0], p[1], p[2])
-        
-                        
-        
+    def pieces(self, palette, generating_events):
 
+        i = {}
+        
+        for p in self.points_on_palette:
+            i.setdefault(p[3], set())
+            i[p[3]].add((p[0][1], p[0][0]))
+
+        ps = pieces_impl.pieces(i)
+
+        instructions = ps[1]
+
+        for piece_type in instructions.keys():
+            for position in instructions[piece_type]:
+                rgb = palette.id_to_rgb(piece_type[2])
+                generating_events['pieces']((position[1], position[0]), (piece_type[1], piece_type[0]), rgb)
+        
 
 
 def image(image_file_name):

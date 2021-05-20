@@ -123,6 +123,7 @@ export default {
           break;
         }  
         case 'piece' : {
+          //console.log(eventData);
           this.state = 'Pieces';
           const ctx = getCtx();
           ctx.fillStyle = `rgba(0,0,0,0.7)`;
@@ -138,14 +139,14 @@ export default {
         case 'endPiece' : {
           this.pieces = this.piecesTemp;
 
-          const ctx = getCtx();
+          //const ctx = getCtx();
 
-          for (const p of this.paletteRects) {
+          /* for (const p of this.paletteRects) {
             const paletteId = p.paletteId;
             const x = p.x;
             const y = p.y;
             ctx.drawImage(this.palette[paletteId], x * 62 , y * 62);
-          }
+          } */
           this.paletteRects = []; //clear memory 
           this.palette = {}; //clear memory 
           
