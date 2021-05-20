@@ -110,48 +110,10 @@ def full_gen(ws):
         except Exception:
             traceback.print_exc()
 
-        
-
-@app.route('/generate', methods=['POST'])
-def generate():
-    size = request.json['size']
-    uid = request.json['uid']
-
-    cup_file_name = utils.cup_name(uid)
-    if os.path.exists(cup_file_name):
-        os.remove(cup_file_name)
-
-    if os.path.exists(utils.output_name(uid)):
-        os.remove(utils.output_name(uid))
-    if os.path.exists(utils.point_name(uid)):
-        os.remove(utils.point_name(uid))
-
-    cup = open(cup_file_name, "a")
-    cup.write(str(size))
-    cup.close()
-
-    return make_response({'uid': uid}, 200)
-
 
 @app.route('/input/<uid>', methods=['GET'])
 def input(uid):
     return send_file(utils.thumb_name(uid), mimetype='image/png')
-
-@app.route('/output/<uid>', methods=['GET'])
-def output(uid):
-    name = utils.output_name(uid)
-    if os.path.exists(name):
-        return send_file(name, mimetype='image/png')
-    else:
-        return make_response({}, 404)
-
-@app.route('/points/<uid>', methods=['GET'])
-def points(uid):
-    name = utils.point_name(uid)
-    if os.path.exists(name):
-        return send_file(name, mimetype='text/plain')
-    else:
-        return make_response({}, 404)
 
 if __name__ == '__main__':
     logger.info("flask booting up")
