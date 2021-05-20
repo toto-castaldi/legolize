@@ -5,6 +5,7 @@
       <canvas id="the-canvas" >
       </canvas>
     </div>
+    {{pieces}}
     <div class="row">
       <div class="col">
         <button
@@ -32,7 +33,9 @@ export default {
       connection: undefined,
       paletteRects : [],
       tileDimension : 8,
-      palette : {}
+      palette : {},
+      piecesTemp : {},
+      pieces : undefined,
     };
   },
   methods: {
@@ -99,27 +102,55 @@ export default {
           ctx.fillStyle = `rgba(${eventData.color[0]},${eventData.color[1]},${eventData.color[2]},${eventData.color[3]})`;
           ctx.fillRect(eventData.x * this.tileDimension, eventData.y * this.tileDimension, this.tileDimension, this.tileDimension);
           this.paletteRects.push({ x : eventData.x, y: eventData.y, paletteId : eventData.palette_id });
-          this.palette[eventData.palette_id] = eventData.palette_img;
+          if (!this.palette[eventData.palette_id]) {
+            const image = new Image();
+            image.src = "data:image/png;base64," + eventData.palette_img;
+            this.palette[eventData.palette_id] = image;
+          }
           break;
         }  
-        case 'end' : {
+        case 'endPalette' : {
           this.state = 'Lego points';
           const ctx = getCtx();
-          console.log(this.tileDimension, this.tileDimension / 62);
           ctx.scale(this.tileDimension / 62, this.tileDimension / 62);
           for (const p of this.paletteRects) {
             const paletteId = p.paletteId;
             const x = p.x;
             const y = p.y;
-            const image = new Image();
-            image.onload = () => {
-              ctx.drawImage(image, x * 62 , y * 62);
-            };
-            image.src = "data:image/png;base64," + this.palette[paletteId];
-          } 
+            ctx.drawImage(this.palette[paletteId], x * 62 , y * 62);
+          }
           
           break;
         }  
+        case 'piece' : {
+          this.state = 'Pieces';
+          const ctx = getCtx();
+          ctx.fillStyle = `rgba(0,0,0,0.7)`;
+          ctx.fillRect(eventData.position[0] * 62, eventData.position[1] * 62, eventData.size[0] * 62, eventData.size[1] * 62);
+          const keySize = `${eventData.size[0]}x${eventData.size[1]}`;
+          const keyColor = `${eventData.color[0]}-${eventData.color[1]}-${eventData.color[2]}-${eventData.color[3]}`;
+          if (!this.piecesTemp[keySize]) this.piecesTemp[keySize] = {};
+          if (!this.piecesTemp[keySize][keyColor]) this.piecesTemp[keySize][keyColor] = 0;
+          this.piecesTemp[keySize][keyColor] ++;
+          break;
+        }
+
+        case 'endPiece' : {
+          this.pieces = this.piecesTemp;
+
+          const ctx = getCtx();
+
+          for (const p of this.paletteRects) {
+            const paletteId = p.paletteId;
+            const x = p.x;
+            const y = p.y;
+            ctx.drawImage(this.palette[paletteId], x * 62 , y * 62);
+          }
+          this.paletteRects = []; //clear memory 
+          this.palette = {}; //clear memory 
+          
+          break;
+        }
       }
     };
   },

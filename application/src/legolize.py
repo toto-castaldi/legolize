@@ -12,6 +12,30 @@ class Lego_Image:
         self.original_size = original_size
         self.new_size = new_size
         self.points = points
+        self.points_on_palette = []
+
+    def apply_palette(self, palette, generating_events):
+        rgbs = palette.rgbs
+
+        for p in self.points:
+            position = p[0]
+            color = p[1]
+
+            the_color_palette = color_utils.nearest(rgbs, color)
+
+            self.points_on_palette.append((position, color, the_color_palette))
+            
+            generating_events['apply_palette']((position, the_color_palette, palette.image_palette(the_color_palette), palette.id_palette(the_color_palette)))
+
+    def pieces(self, generating_events):
+        g_e_pieces = generating_events['pieces'] if generating_events is not None and 'pieces' in generating_events else None
+        for p in self.points_on_palette:
+            #vanilla !!!!
+            if g_e_pieces:
+                g_e_pieces(p[0], (1,1), p[2])
+                        
+        
+
 
 
 def image(image_file_name):
@@ -43,14 +67,4 @@ def load(image, w, h, generating_events):
 
     return Lego_Image(w, h, image.size, new_size, points)
 
-def apply_palette(lego_image, palette, generating_events):
-    rgbs = palette.rgbs
-
-    for p in lego_image.points:
-        position = p[0]
-        color = p[1]
-
-        the_color_palette = color_utils.nearest(rgbs, color)
-        
-        generating_events['apply_palette']((position, the_color_palette, palette.image_palette(the_color_palette), palette.id_palette(the_color_palette)))
 

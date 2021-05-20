@@ -84,17 +84,27 @@ def full_gen(ws):
                 except Exception:
                     traceback.print_exc()
 
+            def generating_events_pieces(position, size, color):
+                try:
+                    ws.send(json.dumps({'action' : 'piece', 'position': position, 'size': size, 'color' : color}))
+                except Exception:
+                    traceback.print_exc()
+
             generating_events = {}
             generating_events['new_size'] = generating_events_new_size
             generating_events['point'] = generating_events_point
             generating_events['apply_palette'] = generating_events_palette
+            generating_events['pieces'] = generating_events_pieces
 
             lego_image = legolize.load(image, step, step, generating_events)
 
-            legolize.apply_palette(lego_image, pal, generating_events)
+            lego_image.apply_palette(pal, generating_events)
 
-            ws.send(json.dumps({'action' : 'end'}))
+            ws.send(json.dumps({'action' : 'endPalette'}))
 
+            lego_image.pieces(generating_events)          
+
+            ws.send(json.dumps({'action' : 'endPiece'}))
         except simple_websocket.ws.ConnectionClosed:
             pass
         except Exception:

@@ -43,7 +43,7 @@ export default {
     back() {
       eventBus.$emit("back", {});
     },
-    async next() {
+    next() {
       eventBus.$emit("generate", { size: this.size });
     },
     handleSize() {
