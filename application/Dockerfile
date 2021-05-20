@@ -9,6 +9,7 @@ ENV UPLOAD_FOLDER=/tmp/UPLOAD_FOLDER
 ENV LOG_LEVEL=DEBUG
 ENV HOST=0.0.0.0
 ENV REDIS=redis://redis:6379
+ENV PIECES_IMPL=samu
 
 COPY ./src ./src
 COPY ./*.csv ./src
