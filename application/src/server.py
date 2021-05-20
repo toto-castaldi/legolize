@@ -15,6 +15,7 @@ import palette
 import csv
 import base64
 from io import BytesIO
+import simple_websocket
 
 
 logger = utils.init_log()
