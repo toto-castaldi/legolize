@@ -14,7 +14,7 @@ COPY ./src ./src
 COPY ./*.csv ./src
 COPY ./*.png ./src
 
-COPY ./gunicorn.sh ./
+COPY ./start.sh ./
 
 EXPOSE 5000
 
