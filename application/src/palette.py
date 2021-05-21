@@ -15,7 +15,7 @@ class Palette:
         with open("20210509-rebrickable-colors.csv") as csvfile:
             csv_reader = csv.reader(csvfile)
             for row in csv_reader:
-                self.add_color(int(row[0]) + 1, row[1], color_utils.html_to_rgb(row[2], 255), 't' == row[3])
+                self.add_color(int(row[0]), row[1], color_utils.html_to_rgb(row[2], 255), 't' == row[3])
 
     def add_color(self, id, name, rgb, is_trans):
         image = image_utils.move_image_color(IMAGE_PALETTE, rgb)

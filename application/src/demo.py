@@ -5,11 +5,13 @@ import json
 
 
 input_image = "smiling-emoji.jpg"
-size = 10
+size = 20
+print_backgrounds = False
 
 
 thumbnail_image = "demo-thumbnail.png"
 palette_point_file = "demo-palette-points.json"
+css_palette = "palette.css"
 
 pal = palette.Palette()
 
@@ -23,8 +25,11 @@ step = max_len // size
 
 palette_point = []
 
-def generating_events_new_size(new_size):
-    pass #print(new_size)
+new_size = None
+
+def generating_events_new_size(ns):
+    global new_size
+    new_size = ns
 
 def generating_events_point(point):
     pass #print(point)
@@ -40,7 +45,8 @@ def generating_events_palette(point):
             "g" : point[1][1],
             "b" : point[1][2],
             "a" : point[1][3]
-        }
+        },
+        "colorId" : point[3]
     })
 
 def generating_events_pieces(position, size, color):
@@ -57,4 +63,19 @@ lego_image.apply_palette(pal, generating_events)
 lego_image.pieces(pal, generating_events)
 
 with open(palette_point_file, 'w') as outfile:
-    json.dump(palette_point, outfile)
+    json.dump({ "h" : new_size[0], "w": new_size[1], "points" : palette_point}, outfile)
+
+with open(css_palette, 'w') as outfile:
+    for rgb in pal.rgbs:
+        id = pal.id_palette(rgb)
+        if print_backgrounds:
+            image = pal.image_palette(rgb)
+            image.save(f"pal-color-{id}.png")
+        outfile.write(f'''
+div.palette-{id} {{ 
+    background-image: url("../images/pal-color-{id}.png");
+}}
+
+        '''
+        )
+        

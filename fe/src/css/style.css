@@ -60,6 +60,13 @@
 }
 
 div.element {
-    border: #000000 solid 1px;
     position: absolute;
+    border: 0px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+div.palette-1012 {
+    background-image: url("../images/pal-color-1012.png");
 }
