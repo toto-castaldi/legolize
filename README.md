@@ -1,11 +1,15 @@
 LEGOLIZE
 ========
 
+[ON LINE](https://legolize.skillbill.net)
+
 [![buddy pipeline](https://app.buddy.works/skillbill-bw/legolize/pipelines/pipeline/326415/badge.svg?token=107d3bbbb60ecabcdb08e0c4f842888977cc5d7b269e84936f8b8074747daf78 "buddy pipeline")](https://app.buddy.works/skillbill-bw/legolize/pipelines/pipeline/326415)
 
-# WHAT ID DOES
 
-[demo](http://legolize.skillbill.net)
+Made with [Samuele](https://github.com/samusamu81)
+
+
+# WHAT ID DOES
 
 ![source](byke-input.jpeg)
 ![dest](byke-output.png?ver=2)
@@ -41,6 +45,14 @@ npm run serve
 cd application
 pip install -r requirements.txt
 PIECES_IMPL=samu DEBUG=True UPLOAD_FOLDER=`pwd`/UPLOAD_FOLDER HOST=127.0.0.1 LOG_LEVEL=DEBUG python src/server.py
+```
+
+### Demo data
+
+```
+cd application
+pip install -r requirements.txt
+python src/demo.py
 ```
 
 # CLOUD SERVER

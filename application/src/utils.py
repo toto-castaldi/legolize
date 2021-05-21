@@ -14,7 +14,7 @@ LOG_LEVELS = {
 log_level = LOG_LEVELS.get(os.environ.get('LOG_LEVEL', 'INFO'))
 logger_handler = False
 
-TMP_FOLDER = os.environ['UPLOAD_FOLDER']
+TMP_FOLDER = os.environ.get('UPLOAD_FOLDER', 'UPLOAD_FOLDER')
 os.makedirs(TMP_FOLDER, exist_ok=True)
 
 def input_name(uid):
