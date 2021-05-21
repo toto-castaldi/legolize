@@ -2,7 +2,7 @@
     --soft-highlight: #d1d1d1;
     --medium-highlight: #807e7e;
     --dark: #000000;
-    --border : 2%;
+    --border: 2%;
 }
 
 #app {
@@ -17,21 +17,11 @@
 #file-browse {
     position: absolute;
     left: var(--border);
-    top : var(--border);
+    top: var(--border);
     background-color: var(--medium-highlight);
     padding: 1em;
     border-radius: 0.4em;
     border: 0.1em solid var(--dark);
-}
-
-#thmbnail {
-    position: absolute;
-    left: var(--border);
-    bottom : var(--border);
-    border-radius: 0.4em;
-    border: 0.1em solid var(--dark);
-    height: 10%;
-    width: 10%;
 }
 
 #thmbnail-img {
@@ -39,17 +29,21 @@
     width: 100%;
 }
 
-#container {
+#thmbnail-container {
     display: inline-block;
     position: absolute;
-    width: 10%;
+    width: 5%;
     left: var(--border);
-    bottom : var(--border);
+    bottom: var(--border);
+    border-radius: 0.4em;
+    border: 0.1em solid var(--dark);
 }
-#dummy {
-    margin-top: 75%;
+
+#thmbnail-dummy {
+    margin-top: 100%;
 }
-#element {
+
+#thmbnail {
     position: absolute;
     top: 0;
     bottom: 0;
