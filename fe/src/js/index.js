@@ -1,6 +1,8 @@
 const elementId = (pos) => `${pos.x}-${pos.y}`;
 
 const start = (data) => {
+    let scale = 1;
+
     //load thumbnail
     document.getElementById("thmbnail-img").src = data.thmbnailSrc;
 
@@ -18,7 +20,7 @@ const start = (data) => {
         const render = document.getElementById("render");
         const renderW = render.clientWidth;
         const renderH = render.clientHeight;
-        const minRenderLen = (renderW > renderH ? renderH : renderW) * 0.9;
+        const minRenderLen = (renderW > renderH ? renderH : renderW) * 0.9 * scale;
         const maxRenderElement = data.renderedInfo.w > data.renderedInfo.h ? data.renderedInfo.w : data.renderedInfo.h;
         const elementLen = minRenderLen / maxRenderElement;
         const centerX = renderW / 2;
@@ -37,7 +39,33 @@ const start = (data) => {
         }
     }
 
-    window.onresize = draw;
+    //zoom
+    const zoom = (event) => {
+        event.preventDefault();
+
+
+
+        if (event.deltaY > 0) {
+            scale += 0.1;
+        } else {
+            scale -= 0.1;
+        }
+
+        //scale += event.deltaY * -0.01;
+
+        scale = Math.min(Math.max(.125, scale), 4);
+
+        draw();
+    }
+
+    const el = document.getElementById("app");
+    el.onwheel = zoom;
+
+
+    window.onresize = () => {
+        scale = 1;
+        draw();
+    }
 
     draw();
 }
