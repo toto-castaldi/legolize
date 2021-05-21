@@ -1,0 +1,10 @@
+:root {
+    --soft-highlight: #d1d1d1;
+}
+
+#app {
+    position: absolute;
+    background-color: var(--soft-highlight);
+    width: 100%;
+    height: 100%;
+}
