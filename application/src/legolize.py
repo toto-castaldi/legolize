@@ -35,19 +35,18 @@ class Lego_Image:
             generating_events['apply_palette']((position, the_color_palette, palette.image_palette(the_color_palette), id_palette))
 
     def pieces(self, palette, generating_events):
-
         i = {}
         
         for p in self.points_on_palette:
             i.setdefault(p[3], set())
             i[p[3]].add((p[0][1], p[0][0]))
 
-        ps = pieces_impl.pieces(i)
-
-        instructions = ps[1]
+        (_, instructions) = pieces_impl.pieces(i)
 
         for piece_type in instructions.keys():
+            # altezza, larghezza, colore
             for position in instructions[piece_type]:
+                #x, y
                 rgb = palette.id_to_rgb(piece_type[2])
                 generating_events['pieces']((position[1], position[0]), (piece_type[1], piece_type[0]), rgb)
         

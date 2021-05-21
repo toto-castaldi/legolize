@@ -7,12 +7,9 @@ import utils
 import image_utils
 import json
 from PIL import Image
-import color_utils
 import traceback
 import legolize
-import time
 import palette
-import csv
 import base64
 from io import BytesIO
 import simple_websocket
@@ -26,11 +23,6 @@ DEBUG = os.environ.get('DEBUG', 'False')
 sock = Sock(app)
 
 pal = palette.Palette()
-with open("20210509-rebrickable-colors.csv") as csvfile:
-    csv_reader = csv.reader(csvfile)
-    for row in csv_reader:
-        logger.debug(row[2])
-        pal.add_color(int(row[0]) + 1, row[1], color_utils.html_to_rgb(row[2], 255), 't' == row[3])
         
 logger.info(f"palette loaded of {len(pal.colors)} colors")
 
