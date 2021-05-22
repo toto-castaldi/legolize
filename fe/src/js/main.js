@@ -1,11 +1,10 @@
-import { showWaitingArea } from './waiting.js';
+import { setUrl, sendEvent } from './utils.js';
+import './waiting.js';
+import './inputImage.js';
 
-let appState = 'WAITING';
 
-switch (appState) {
-    case 'WAITING':
-        showWaitingArea();
-        break;
-    default:
-        break;
-}
+const configRes = await fetch("config.json");
+const configJson = await configRes.json();
+setUrl(configJson);
+sendEvent('init');
+sendEvent('start');

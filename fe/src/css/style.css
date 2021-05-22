@@ -72,9 +72,14 @@ div.palette-1012 {
 }
 
 #waiting {
-    border: 0.2em solid var(--dark);
-    background-color: var(--highlight-02);
     position: absolute;
+    text-align: center;
+}
+
+#waiting-img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
 }
 
 div.hidden {

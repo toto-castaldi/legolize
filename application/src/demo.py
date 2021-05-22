@@ -13,7 +13,7 @@ thumbnail_image = "demo-thumbnail.png"
 palette_point_file = "demo-palette-points.json"
 css_palette = "palette.css"
 
-pal = palette.Palette()
+pal = palette.Palette(COMPUTE_IMAGE = True)
 
 image = image_utils.image_thumbnail(input_image, (300, 300))
 image.save(thumbnail_image)

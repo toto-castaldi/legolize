@@ -20,9 +20,6 @@ os.makedirs(TMP_FOLDER, exist_ok=True)
 def input_name(uid):
     return os.path.join(TMP_FOLDER, f"{uid}-input")
 
-def point_name(uid):
-    return os.path.join(TMP_FOLDER, f"{uid}-points")
-
 def seed(file):
     res = None
     base_name = ntpath.basename(file)
@@ -30,17 +27,12 @@ def seed(file):
         res = base_name[0:base_name.rfind('-')]
     return res
 
-def is_input_file(file):
-    return file.endswith("-input")
-
-def cup_name(uid):
-    return os.path.join(TMP_FOLDER, f"{uid}-cup")
-
 def thumb_name(uid):
     return os.path.join(TMP_FOLDER, f"{uid}-thumb.png")
 
-def output_name(uid):
-    return os.path.join(TMP_FOLDER, f"{uid}-output.png")
+def waiting_name(uid):
+    return os.path.join(TMP_FOLDER, f"{uid}-waiting.png")
+
 
 
 def init_log():
