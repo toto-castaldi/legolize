@@ -70,3 +70,13 @@ div.element {
 div.palette-1012 {
     background-image: url("../images/pal-color-1012.png");
 }
+
+#waiting {
+    border: 0.2em solid var(--dark);
+    background-color: var(--highlight-02);
+    position: absolute;
+}
+
+div.hidden {
+    visibility: hidden;
+}
