@@ -67,24 +67,15 @@ def full_gen(ws):
             def generating_events_new_size(new_size):
                 ws.send(json.dumps({'action' : 'size', 'w': new_size[0], 'h': new_size[1]}))
 
-            def generating_events_point(point):
-                ws.send(json.dumps({'action' : 'point', 'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
+            def generating_events_point(point, progress):
+                #ws.send(json.dumps({'action' : 'point', 'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
+                ws.send(json.dumps({'action' : 'point', 'progress' : progress}))
 
             def generating_events_palette(point):
-                try:
-                    buffered = BytesIO()
-                    image = point[2]
-                    image.save(buffered, format='PNG')
-                    img_str = base64.b64encode(buffered.getvalue()).decode('ascii')
-                    ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3], 'palette_img' : img_str}))
-                except Exception:
-                    traceback.print_exc()
+                pass#ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3]}))
 
             def generating_events_pieces(position, size, color):
-                try:
-                    ws.send(json.dumps({'action' : 'piece', 'position': position, 'size': size, 'color' : color}))
-                except Exception:
-                    traceback.print_exc()
+                pass#ws.send(json.dumps({'action' : 'piece', 'position': position, 'size': size, 'color' : color}))
 
             generating_events = {}
             generating_events['new_size'] = generating_events_new_size
@@ -99,7 +90,7 @@ def full_gen(ws):
             ws.send(json.dumps({'action' : 'endPalette'}))
 
             lego_image.pieces(pal, generating_events)          
-
+            
             ws.send(json.dumps({'action' : 'endPiece'}))
         except simple_websocket.ws.ConnectionClosed:
             pass

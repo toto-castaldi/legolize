@@ -46,11 +46,54 @@ const postFormData = async(url, { formData }) => {
     });
 }
 
+const get = async(url) => {
+    const res = await fetch(`${serverUrl}${url}`, {
+        method: 'GET'
+    })
+    return res;
+};
+
+const post = async(url, { body }) => {
+    const res = await fetch(`${serverUrl}${url}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+    });
+
+    return res;
+}
+
+const put = async(url, { body }) => {
+    const res = await fetch(`${serverUrl}${url}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+    });
+
+    return res;
+}
+
+const del = async(url) => {
+    const res = await fetch(`${serverUrl}${url}`, {
+        method: 'DELETE'
+    });
+
+    return res;
+}
+
 const sendEvent = (name, data) => window.dispatchEvent(new CustomEvent(name, { detail: data }))
 
 const onEvent = (name, f) => window.addEventListener(name, event => f(event.detail))
 
 const apiWaitingImage = (uid) => `${serverUrl}waiting/${uid}`;
+
+const websocketUrl = (res) => `${wsUrl}${res}`;
+
+const disableElement = (element) => element.disabled = 'disabled';
 
 onWindowResize(() => {
     appW = appElement.clientWidth;
@@ -63,4 +106,4 @@ window.onresize = () => {
     }
 }
 
-export { apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
+export { disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
