@@ -13,6 +13,7 @@
     height: 100%;
     top: 0;
     left: 0;
+    text-align: center;
 }
 
 #file-browse {
@@ -67,10 +68,6 @@ div.element {
     background-size: cover;
 }
 
-div.palette-1012 {
-    background-image: url("../images/pal-color-1012.png");
-}
-
 #waiting {
     position: absolute;
     text-align: center;
@@ -84,4 +81,23 @@ div.palette-1012 {
 
 div.hidden {
     visibility: hidden;
+}
+
+#render-progress {
+    position: absolute;
+    bottom: var(--border);
+    width: 100%;
+}
+
+#progress {
+    width: 100%;
+}
+
+#render-progress-info {
+    min-width: 10%;
+    background-color: var(--highlight-02);
+    display: inline-grid;
+    display: -ms-inline-grid;
+    border-radius: 0.4em;
+    border: 0.1em solid var(--dark);
 }

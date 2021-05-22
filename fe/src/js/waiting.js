@@ -1,4 +1,4 @@
-import { sendEvent, show, setWidth, setHeight, center, onWindowResize, minAppDimension, getWidth, onEvent, apiWaitingImage, post } from './utils.js';
+import { sendEvent, show, setWidth, setHeight, center, onWindowResize, minAppDimension, getWidth, onEvent, apiWaitingImage } from './utils.js';
 
 const waitingElement = document.getElementById('waiting');
 const waitingImgElement = document.getElementById('waiting-img');
