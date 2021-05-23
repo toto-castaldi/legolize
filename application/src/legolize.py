@@ -55,7 +55,6 @@ class Lego_Image:
         for piece_type in instructions.keys():
             total = total + len(instructions[piece_type])
         
-        print(total)
         count = 1
         for piece_type in instructions.keys():
             # altezza, larghezza, colore

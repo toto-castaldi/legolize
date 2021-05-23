@@ -15,6 +15,7 @@ const labels = {
 
 
 onEvent('waitingLoaded', ({ uid, size }) => {
+    const pieces = [];
     connection = new WebSocket(websocketUrl("fullgenerate"));
     connection.onopen = () => {
         connection.send(JSON.stringify({ uid, size }));
@@ -24,8 +25,8 @@ onEvent('waitingLoaded', ({ uid, size }) => {
     };
     connection.onmessage = (event) => {
         const eventData = JSON.parse(event.data);
-        if (eventData.action.startsWith("end")) {
-            console.log(eventData);
+        if (eventData.action == "piece") {
+            pieces.push(eventData.piece);
         }
         if (eventData.progress) {
             labelRenderProgressElement.innerHTML = `${labels[eventData.action]}`;

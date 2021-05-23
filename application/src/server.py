@@ -76,7 +76,9 @@ def full_gen(ws):
                 #ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3]}))
 
             def generating_events_pieces(piece, progress):
-                ws.send(json.dumps({'action' : 'piece', 'progress' : progress}))
+                ws.send(json.dumps({'action' : 'piece', 'piece' : {
+                    'position': piece[0], 'size': piece[1], 'color' : piece[2]
+                },  'progress' : progress}))
                 #ws.send(json.dumps({'action' : 'piece', 'position': position, 'size': size, 'color' : color}))
 
             generating_events = {}
