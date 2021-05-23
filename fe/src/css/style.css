@@ -94,7 +94,7 @@ div.hidden {
 }
 
 #render-progress-info {
-    min-width: 10%;
+    min-width: 40%;
     background-color: var(--highlight-02);
     display: inline-grid;
     display: -ms-inline-grid;

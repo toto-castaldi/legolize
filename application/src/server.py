@@ -71,11 +71,13 @@ def full_gen(ws):
                 #ws.send(json.dumps({'action' : 'point', 'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
                 ws.send(json.dumps({'action' : 'point', 'progress' : progress}))
 
-            def generating_events_palette(point):
-                pass#ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3]}))
+            def generating_events_palette(point, progress):
+                ws.send(json.dumps({'action' : 'palette', 'progress' : progress}))
+                #ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3]}))
 
-            def generating_events_pieces(position, size, color):
-                pass#ws.send(json.dumps({'action' : 'piece', 'position': position, 'size': size, 'color' : color}))
+            def generating_events_pieces(piece, progress):
+                ws.send(json.dumps({'action' : 'piece', 'progress' : progress}))
+                #ws.send(json.dumps({'action' : 'piece', 'position': position, 'size': size, 'color' : color}))
 
             generating_events = {}
             generating_events['new_size'] = generating_events_new_size
@@ -85,13 +87,15 @@ def full_gen(ws):
 
             lego_image = legolize.load(image, step, step, generating_events)
 
+            ws.send(json.dumps({'action' : 'endPoints'}))
+
             lego_image.apply_palette(pal, generating_events)
 
             ws.send(json.dumps({'action' : 'endPalette'}))
 
             lego_image.pieces(pal, generating_events)          
             
-            ws.send(json.dumps({'action' : 'endPiece'}))
+            ws.send(json.dumps({'action' : 'endPieces'}))
         except simple_websocket.ws.ConnectionClosed:
             pass
         except Exception:

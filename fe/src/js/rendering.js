@@ -6,6 +6,11 @@ let connection;
 const renderProgressElement = document.getElementById('render-progress');
 const progressElement = document.getElementById('progress');
 const labelRenderProgressElement = document.getElementById('label-progress');
+const labels = {
+    'point': 'Clustering (1/3) :',
+    'palette': 'Apply palette (2/3) :',
+    'piece': 'Compute pieces (3/3) :'
+}
 
 
 
@@ -19,9 +24,11 @@ onEvent('waitingLoaded', ({ uid, size }) => {
     };
     connection.onmessage = (event) => {
         const eventData = JSON.parse(event.data);
-        console.log(eventData);
+        if (eventData.action.startsWith("end")) {
+            console.log(eventData);
+        }
         if (eventData.progress) {
-            labelRenderProgressElement.innerHTML = `${eventData.action} :`;
+            labelRenderProgressElement.innerHTML = `${labels[eventData.action]}`;
             progressElement.value = eventData.progress;
         }
     }

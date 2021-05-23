@@ -23,6 +23,9 @@ class Lego_Image:
     def apply_palette(self, palette, generating_events):
         rgbs = palette.rgbs
 
+        total = len(self.points)
+        count = 1
+
         for p in self.points:
             position = p[0]
             color = p[1]
@@ -35,7 +38,9 @@ class Lego_Image:
                 (position, color, the_color_palette, id_palette))
 
             generating_events['apply_palette'](
-                (position, the_color_palette, palette.image_palette(the_color_palette), id_palette))
+                (position, the_color_palette, palette.image_palette(the_color_palette), id_palette), math.floor(count * 100 / total))
+
+            count = count + 1
 
     def pieces(self, palette, generating_events):
         i = {}
@@ -46,13 +51,23 @@ class Lego_Image:
 
         (_, instructions) = pieces_impl.pieces(i)
 
+        total = 0
+        for piece_type in instructions.keys():
+            total = total + len(instructions[piece_type])
+        
+        print(total)
+        count = 1
         for piece_type in instructions.keys():
             # altezza, larghezza, colore
             for position in instructions[piece_type]:
                 # x, y
                 rgb = palette.id_to_rgb(piece_type[2])
                 generating_events['pieces'](
-                    (position[1], position[0]), (piece_type[1], piece_type[0]), rgb)
+                    ((position[1], position[0]), (piece_type[1], piece_type[0]), rgb),
+                    math.floor(count * 100 / total)
+                    )
+                #print(count, total)
+                count = count + 1
 
 
 def image(image_file_name):
