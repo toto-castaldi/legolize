@@ -1,4 +1,4 @@
-import { onEvent, websocketUrl, show } from './utils.js';
+import { onEvent, websocketUrl, show, sendEvent, hide } from './utils.js';
 
 let connection;
 
@@ -31,6 +31,10 @@ onEvent('waitingLoaded', ({ uid, size }) => {
         if (eventData.progress) {
             labelRenderProgressElement.innerHTML = `${labels[eventData.action]}`;
             progressElement.value = eventData.progress;
+        }
+        if (eventData.action == "endPieces") {
+            hide(renderProgressElement);
+            sendEvent('renderingDone', { pieces });
         }
     }
 });

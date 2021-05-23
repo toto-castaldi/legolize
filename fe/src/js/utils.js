@@ -5,9 +5,9 @@ let appH = appElement.clientHeight;
 let serverUrl = "";
 let wsUrl = "";
 
-const removeClass = (element, clazzName) => {
-    element.classList.remove(clazzName);
-}
+const removeClass = (element, clazzName) => element.classList.remove(clazzName);
+
+const addClass = (element, clazzName) => element.classList.add(clazzName);
 
 const setWidth = (element, w) => {
     element.style.width = Math.ceil(w) + "px";
@@ -26,9 +26,9 @@ const center = (element, currentW, currentH) => {
     element.style.top = Math.ceil(appH / 2 - currentH / 2) + "px";
 }
 
-const show = (element) => {
-    removeClass(element, "hidden");
-}
+const show = element => removeClass(element, "hidden");
+
+const hide = element => addClass(element, "hidden");
 
 const onWindowResize = (f) => resizingCallbacks.push(f);
 
@@ -106,4 +106,4 @@ window.onresize = () => {
     }
 }
 
-export { disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
+export { hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
