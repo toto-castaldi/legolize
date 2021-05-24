@@ -34,6 +34,7 @@ onEvent('waitingLoaded', ({ uid, size }) => {
         }
         if (eventData.action == "endPieces") {
             hide(renderProgressElement);
+            connection.close();
             sendEvent('renderingDone', { pieces });
         }
     }

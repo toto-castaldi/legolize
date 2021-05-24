@@ -106,4 +106,4 @@ window.onresize = () => {
     }
 }
 
-export { hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
+export { removeClass, hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
