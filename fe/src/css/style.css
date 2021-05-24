@@ -27,10 +27,15 @@
     z-index: 1;
 }
 
-#thmbnail-img,
 #render {
     height: 100%;
     width: 100%;
+}
+
+#thumbnail-img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
 }
 
 #thumbnail-container {
@@ -80,7 +85,7 @@ div.element {
     object-fit: contain;
 }
 
-div.hidden {
+.hidden {
     visibility: hidden;
 }
 

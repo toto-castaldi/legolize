@@ -91,6 +91,8 @@ const onEvent = (name, f) => window.addEventListener(name, event => f(event.deta
 
 const apiWaitingImage = (uid) => `${serverUrl}waiting/${uid}`;
 
+const apiThumbnailImage = (uid) => `${serverUrl}thumbnail/${uid}`;
+
 const websocketUrl = (res) => `${wsUrl}${res}`;
 
 const disableElement = (element) => element.disabled = 'disabled';
@@ -106,4 +108,4 @@ window.onresize = () => {
     }
 }
 
-export { removeClass, hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
+export { apiThumbnailImage, removeClass, hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }

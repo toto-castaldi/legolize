@@ -1,12 +1,11 @@
-import { onEvent, removeClass } from './utils.js';
+import { hide, onEvent, removeClass, show, apiThumbnailImage } from './utils.js';
 
 const waitingImg = document.getElementById("waiting-img");
 const thumbnailContainer = document.getElementById("thumbnail-container");
+const thumbnailImg = document.getElementById("thumbnail-img");
 const app = document.getElementById("app");
 
-onEvent('renderingDone', ({ pieces }) => {
-
-    console.log(pieces.length);
+onEvent('renderingDone', ({ uid, pieces }) => {
     removeClass(waitingImg, 'waiting-img');
     const startingR = waitingImg.getBoundingClientRect();
     app.appendChild(waitingImg);
@@ -18,14 +17,21 @@ onEvent('renderingDone', ({ pieces }) => {
 
     const wR = waitingImg.getBoundingClientRect();
     const tR = thumbnailContainer.getBoundingClientRect();
-    const tX = tR.left - wR.left;
-    const tY = tR.top - wR.top;
-    const sX = 10 * tR.width / wR.width;
-    const sY = 10 * tR.height / wR.height;
-    waitingImg.style.transition = "all 5s";
+    const wX = wR.left + (wR.width / 2) - (tR.width / 2);
+    const wY = wR.top + (wR.height / 2) - (tR.height / 2);
+
+    const tX = tR.left - wX;
+    const tY = tR.top - wY;
+    const sX = tR.width / wR.width;
+    const sY = tR.height / wR.height;
+    waitingImg.style.transition = "all 1s";
     waitingImg.style.transform = `translateX(${tX}px) translateY(${tY}px) scale(${sX}, ${sY})`;
-    //console.log(`translateX(${tX}px) translateY(${tY}px) scale(${sX}, ${sY})`);
-    //waitingImg.style.transform = `translateY(${tY}px)`;
-    //waitingImg.style.transform = `scale(${sX}, ${sY})`;
+    waitingImg.ontransitionend = () => {
+        thumbnailImg.src = apiThumbnailImage(uid);
+        show(thumbnailContainer);
+        hide(waitingImg);
+    };
+
+
 
 });
