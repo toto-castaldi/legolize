@@ -1,4 +1,4 @@
-import { onEvent, websocketUrl, show, sendEvent, hide } from './utils.js';
+import { onEvent, websocketUrl, show, sendEvent, hide, store } from './utils.js';
 
 let connection;
 
@@ -25,6 +25,9 @@ onEvent('waitingLoaded', ({ uid, size }) => {
     };
     connection.onmessage = (event) => {
         const eventData = JSON.parse(event.data);
+        if (eventData.action == "size") {
+            store()["size"] = { "w": eventData.w, "h": eventData.h };
+        }
         if (eventData.action == "piece") {
             pieces.push(eventData.piece);
         }

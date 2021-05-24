@@ -27,6 +27,23 @@
     z-index: 1;
 }
 
+.piece {
+    position: absolute;
+    left: var(--border);
+    z-index: 1;
+}
+
+.piece-point {
+    position: absolute;
+    z-index: 1;
+    width: 62px;
+    height: 62px;
+    border: 0px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 #render {
     height: 100%;
     width: 100%;
@@ -64,14 +81,6 @@
 #file-picker,
 #size {
     background-color: var(--highlight-02);
-}
-
-div.element {
-    position: absolute;
-    border: 0px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 #waiting {

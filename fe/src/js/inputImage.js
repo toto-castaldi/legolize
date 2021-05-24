@@ -1,10 +1,18 @@
-import { postFormData, sendEvent, onEvent, disableElement } from './utils.js';
+import { postFormData, sendEvent, onEvent, disableElement, enableElement } from './utils.js';
 import { waitingDim } from './waiting.js';
 
 const filePickerElement = document.getElementById('file-picker')
 const sizeElement = document.getElementById('size')
 
 onEvent('init', () => {
+    sizeElement.onchange = (e) => {
+        e.preventDefault();
+        if (sizeElement.value > 0) {
+            disableElement(sizeElement);
+            enableElement(filePickerElement);
+        }
+    }
+
     filePickerElement.onchange = async(e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -15,6 +23,5 @@ onEvent('init', () => {
         const json = await res.json();
         sendEvent('uploaded', { uid: json.uid, size: sizeElement.value });
         disableElement(filePickerElement);
-        disableElement(sizeElement);
     }
 });

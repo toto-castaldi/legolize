@@ -2,6 +2,7 @@ import { setUrl, sendEvent } from './utils.js';
 import './waiting.js';
 import './inputImage.js';
 import './rendering.js';
+import './animWaiting.js';
 import './construct.js';
 
 

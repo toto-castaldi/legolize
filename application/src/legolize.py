@@ -60,9 +60,9 @@ class Lego_Image:
             # altezza, larghezza, colore
             for position in instructions[piece_type]:
                 # x, y
-                rgb = palette.id_to_rgb(piece_type[2])
+                #rgb = palette.id_to_rgb(piece_type[2])
                 generating_events['pieces'](
-                    ((position[1], position[0]), (piece_type[1], piece_type[0]), rgb),
+                    ((position[1], position[0]), (piece_type[1], piece_type[0]), piece_type[2]),
                     math.floor(count * 100 / total)
                     )
                 #print(count, total)

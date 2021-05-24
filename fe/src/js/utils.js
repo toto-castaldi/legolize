@@ -4,6 +4,7 @@ let appW = appElement.clientWidth;
 let appH = appElement.clientHeight;
 let serverUrl = "";
 let wsUrl = "";
+const theStore = {};
 
 const removeClass = (element, clazzName) => element.classList.remove(clazzName);
 
@@ -97,6 +98,10 @@ const websocketUrl = (res) => `${wsUrl}${res}`;
 
 const disableElement = (element) => element.disabled = 'disabled';
 
+const enableElement = (element) => element.disabled = '';
+
+const store = () => theStore;
+
 onWindowResize(() => {
     appW = appElement.clientWidth;
     appH = appElement.clientHeight;
@@ -108,4 +113,4 @@ window.onresize = () => {
     }
 }
 
-export { apiThumbnailImage, removeClass, hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
+export { enableElement, store, addClass, apiThumbnailImage, removeClass, hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
