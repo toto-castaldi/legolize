@@ -12,8 +12,8 @@ ENV REDIS=redis://redis:6379
 ENV PIECES_IMPL=samu
 
 COPY ./src ./src
-COPY ./*.csv ./src
-COPY ./*.png ./src
+COPY ./*.csv ./src/
+COPY ./*.png ./src/
 
 COPY ./start.sh ./
 
