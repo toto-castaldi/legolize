@@ -1,0 +1,118 @@
+:root {
+    --highlight-00: #d1d1d1;
+    --highlight-01: #9c9c9c;
+    --highlight-02: #818181;
+    --dark: #000000;
+    --border: 2%;
+}
+
+#app {
+    position: fixed;
+    background-color: var(--highlight-00);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    text-align: center;
+}
+
+#file-browse {
+    position: absolute;
+    left: var(--border);
+    top: var(--border);
+    background-color: var(--highlight-01);
+    padding: 1em;
+    border-radius: 0.4em;
+    border: 0.1em solid var(--dark);
+    z-index: 1;
+}
+
+.piece {
+    position: absolute;
+    left: var(--border);
+    z-index: 1;
+}
+
+.piece-point {
+    position: absolute;
+    z-index: 1;
+    width: 62px;
+    height: 62px;
+    border: 0px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#render {
+    height: 100%;
+    width: 100%;
+}
+
+#thumbnail-img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+#thumbnail-container {
+    display: inline-block;
+    position: absolute;
+    width: 5%;
+    left: var(--border);
+    bottom: var(--border);
+    border-radius: 0.4em;
+    border: 0.1em solid var(--dark);
+}
+
+#thumbnail-dummy {
+    margin-top: 100%;
+}
+
+#thumbnail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: silver;
+}
+
+#file-picker,
+#size {
+    background-color: var(--highlight-02);
+}
+
+#waiting {
+    position: absolute;
+    text-align: center;
+}
+
+.waiting-img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+#render-progress {
+    position: absolute;
+    bottom: var(--border);
+    width: 100%;
+}
+
+#progress {
+    width: 100%;
+}
+
+#render-progress-info {
+    min-width: 40%;
+    background-color: var(--highlight-02);
+    display: inline-grid;
+    display: -ms-inline-grid;
+    border-radius: 0.4em;
+    border: 0.1em solid var(--dark);
+}

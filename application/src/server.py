@@ -7,12 +7,9 @@ import utils
 import image_utils
 import json
 from PIL import Image
-import color_utils
 import traceback
 import legolize
-import time
 import palette
-import csv
 import base64
 from io import BytesIO
 import simple_websocket
@@ -26,26 +23,25 @@ DEBUG = os.environ.get('DEBUG', 'False')
 sock = Sock(app)
 
 pal = palette.Palette()
-with open("20210509-rebrickable-colors.csv") as csvfile:
-    csv_reader = csv.reader(csvfile)
-    for row in csv_reader:
-        logger.debug(row[2])
-        pal.add_color(int(row[0]) + 1, row[1], color_utils.html_to_rgb(row[2], 255), 't' == row[3])
         
 logger.info(f"palette loaded of {len(pal.colors)} colors")
 
-@app.route('/upload', methods=['POST'])
-def upload():
+@app.route('/upload/<size>', methods=['POST'])
+def upload(size):
     uid = str(uuid.uuid4())
+    input_name = utils.input_name(uid)
 
     file = request.files['file']
 
-    file.save(utils.input_name(uid))
+    file.save(input_name)
 
-    image = image_utils.image_thumbnail(utils.input_name(uid))
+    image = image_utils.image_thumbnail(input_name)
     image.save(utils.thumb_name(uid))
 
-    logger.debug(f"saved {utils.thumb_name(uid)}")
+    image = image_utils.image_thumbnail(input_name, MAX_SIZE=(int(size), int(size)))
+    image.save(utils.waiting_name(uid))
+
+    logger.debug(f"saved thumbnails")
 
     return make_response({'uid': uid}, 200)
 
@@ -71,24 +67,19 @@ def full_gen(ws):
             def generating_events_new_size(new_size):
                 ws.send(json.dumps({'action' : 'size', 'w': new_size[0], 'h': new_size[1]}))
 
-            def generating_events_point(point):
-                ws.send(json.dumps({'action' : 'point', 'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
+            def generating_events_point(point, progress):
+                #ws.send(json.dumps({'action' : 'point', 'x': point[0][0], 'y': point[0][1], 'color' : point[1]}))
+                ws.send(json.dumps({'action' : 'point', 'progress' : progress}))
 
-            def generating_events_palette(point):
-                try:
-                    buffered = BytesIO()
-                    image = point[2]
-                    image.save(buffered, format='PNG')
-                    img_str = base64.b64encode(buffered.getvalue()).decode('ascii')
-                    ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3], 'palette_img' : img_str}))
-                except Exception:
-                    traceback.print_exc()
+            def generating_events_palette(point, progress):
+                ws.send(json.dumps({'action' : 'palette', 'progress' : progress}))
+                #ws.send(json.dumps({'action' : 'palette', 'x': point[0][0], 'y': point[0][1], 'color' : point[1], 'palette_id' : point[3]}))
 
-            def generating_events_pieces(position, size, color):
-                try:
-                    ws.send(json.dumps({'action' : 'piece', 'position': position, 'size': size, 'color' : color}))
-                except Exception:
-                    traceback.print_exc()
+            def generating_events_pieces(piece, progress):
+                ws.send(json.dumps({'action' : 'piece', 'piece' : {
+                    'position': piece[0], 'size': piece[1], 'color' : piece[2]
+                },  'progress' : progress}))
+                #ws.send(json.dumps({'action' : 'piece', 'position': position, 'size': size, 'color' : color}))
 
             generating_events = {}
             generating_events['new_size'] = generating_events_new_size
@@ -98,22 +89,28 @@ def full_gen(ws):
 
             lego_image = legolize.load(image, step, step, generating_events)
 
+            ws.send(json.dumps({'action' : 'endPoints'}))
+
             lego_image.apply_palette(pal, generating_events)
 
             ws.send(json.dumps({'action' : 'endPalette'}))
 
             lego_image.pieces(pal, generating_events)          
-
-            ws.send(json.dumps({'action' : 'endPiece'}))
+            
+            ws.send(json.dumps({'action' : 'endPieces'}))
         except simple_websocket.ws.ConnectionClosed:
             pass
         except Exception:
             traceback.print_exc()
 
 
-@app.route('/input/<uid>', methods=['GET'])
-def input(uid):
+@app.route('/thumbnail/<uid>', methods=['GET'])
+def thumbnail(uid):
     return send_file(utils.thumb_name(uid), mimetype='image/png')
+
+@app.route('/waiting/<uid>', methods=['GET'])
+def waiting(uid):
+    return send_file(utils.waiting_name(uid), mimetype='image/png')
 
 if __name__ == '__main__':
     logger.info("flask booting up")

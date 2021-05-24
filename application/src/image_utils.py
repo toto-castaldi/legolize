@@ -42,8 +42,7 @@ def change_colors(image_file_name, translation_map):
                 image.putpixel((x, y), translation_map[pixel])
     return image
 
-def image_thumbnail(image_file_name):
+def image_thumbnail(image_file_name, MAX_SIZE=(530,530)):
     image = Image.open(image_file_name)
-    MAX_SIZE = (530, 530)
     image.thumbnail(MAX_SIZE)
     return image
