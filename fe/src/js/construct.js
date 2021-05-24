@@ -58,8 +58,8 @@ onEvent("animWaitingDone", () => {
         const pR = pieceDiv.getBoundingClientRect();
         const tX = startX + piece.position[0] * elementLen - pR.left;
         const tY = startY + piece.position[1] * elementLen - pR.top;
-        if (transitionDelay > 300) {
-            transitionDelay -= 300;
+        if (transitionDelay > 100) {
+            transitionDelay -= 100;
         }
         pieceDiv.style.transition = `all ${transitionDelay}ms`;
         pieceDiv.style.transform = `translateX(${tX}px) translateY(${tY}px)`;
