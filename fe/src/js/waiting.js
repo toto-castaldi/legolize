@@ -1,4 +1,4 @@
-import { sendEvent, show, setWidth, setHeight, center, onWindowResize, minAppDimension, getWidth, onEvent, apiWaitingImage } from './utils.js';
+import { sendEvent, show, setWidth, setHeight, center, onWindowResize, minAppDimension, getWidth, onEvent, apiWaitingImage, store } from './utils.js';
 
 const waitingElement = document.getElementById('waiting');
 const waitingImgElement = document.getElementById('waiting-img');
@@ -22,9 +22,10 @@ window.addEventListener('init', () => {
     showWaitingArea();
 });
 
-onEvent('uploaded', ({ uid, size }) => {
+onEvent('uploaded', () => {
+    const uid = store()["uid"];
     waitingImgElement.src = apiWaitingImage(uid);
-    sendEvent('waitingLoaded', { uid, size });
+    sendEvent('waitingLoaded');
 });
 
 

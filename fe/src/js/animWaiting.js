@@ -5,8 +5,8 @@ const thumbnailContainer = document.getElementById("thumbnail-container");
 const thumbnailImg = document.getElementById("thumbnail-img");
 const app = document.getElementById("app");
 
-onEvent("renderingDone", ({ uid, pieces }) => {
-    store()["pieces"] = pieces;
+onEvent("renderingDone", () => {
+    const uid = store()["uid"];
     removeClass(waitingImg, 'waiting-img');
     const startingR = waitingImg.getBoundingClientRect();
     app.appendChild(waitingImg);
@@ -34,7 +34,7 @@ onEvent("renderingDone", ({ uid, pieces }) => {
             thumbnailImg.src = apiThumbnailImage(uid);
             show(thumbnailContainer);
             hide(waitingImg);
-            sendEvent("animWaitingDone", {});
+            sendEvent("animWaitingDone");
         }
     };
 

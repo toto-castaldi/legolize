@@ -58,11 +58,12 @@
 #thumbnail-container {
     display: inline-block;
     position: absolute;
-    width: 5%;
+    width: 7%;
     left: var(--border);
     bottom: var(--border);
     border-radius: 0.4em;
     border: 0.1em solid var(--dark);
+    min-width: 100px;
 }
 
 #thumbnail-dummy {
@@ -115,4 +116,8 @@
     display: -ms-inline-grid;
     border-radius: 0.4em;
     border: 0.1em solid var(--dark);
+}
+
+#choosen-size {
+    width: 3em;
 }

@@ -14,7 +14,9 @@ const labels = {
 
 
 
-onEvent('waitingLoaded', ({ uid, size }) => {
+onEvent('waitingLoaded', () => {
+    const uid = store()["uid"];
+    const size = store()["size"];
     const pieces = [];
     connection = new WebSocket(websocketUrl("fullgenerate"));
     connection.onopen = () => {
@@ -38,7 +40,8 @@ onEvent('waitingLoaded', ({ uid, size }) => {
         if (eventData.action == "endPieces") {
             hide(renderProgressElement);
             connection.close();
-            sendEvent('renderingDone', { uid, pieces });
+            store()["pieces"] = pieces;
+            sendEvent('renderingDone');
         }
     }
 });
