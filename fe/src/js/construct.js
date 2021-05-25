@@ -1,4 +1,4 @@
-import { onEvent, addClass, store } from './utils.js';
+import { onEvent, addClass, store, sendEvent } from './utils.js';
 
 const fileBrowseElement = document.getElementById("file-browse");
 const app = document.getElementById("app");
@@ -57,22 +57,31 @@ onEvent("animWaitingDone", async() => {
             const tX = startX + piece.position[0] * elementLen - pR.left;
             const tY = startY + piece.position[1] * elementLen - pR.top;
             if (transitionDelay > 0) {
-                transitionDelay -= 100;
+                transitionDelay -= 200;
+            }
+            if (transitionDelay < 20) {
+                transitionDelay = 20;
             }
             pieceDiv.style.transition = `all ${transitionDelay}ms`;
             pieceDiv.style.transform = `translateX(${tX}px) translateY(${tY}px)`;
-            let end = false;
-            pieceDiv.ontransitionend = () => {
-                if (!end) {
-                    end = true;
-                    resolve();
-                }
-            };
+            if (transitionDelay <= 0) {
+                resolve();
+            } else {
+                let end = false;
+                pieceDiv.ontransitionend = () => {
+                    if (!end) {
+                        end = true;
+                        resolve();
+                    }
+                };
+            }
         });
     }
 
     for (const piece of pieces) {
         await placePiece(piece);
     }
+
+    sendEvent("constructionDone");
 
 });
