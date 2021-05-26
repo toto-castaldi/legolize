@@ -9,7 +9,7 @@ LEGOLIZE
 Made with [Samuele](https://github.com/samusamu81)
 
 
-# WHAT ID DOES
+# WHAT IT DOES
 
 ![source](byke-input.jpeg)
 ![dest](byke-output.png?ver=2)
