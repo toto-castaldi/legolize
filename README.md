@@ -122,5 +122,3 @@ location /ws {
 ### Greetings
 
 [Lego Colors from Rebrickable](https://rebrickable.com/downloads/)
-
-[Fork me on Github](https://github.com/simonwhitaker/github-fork-ribbon-css)
