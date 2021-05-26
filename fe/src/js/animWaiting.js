@@ -9,7 +9,7 @@ onEvent("renderingDone", () => {
     const uid = store()["uid"];
     removeClass(waitingImg, 'waiting-img');
     const startingR = waitingImg.getBoundingClientRect();
-    app.appendChild(waitingImg);
+    //app.appendChild(waitingImg);
     waitingImg.style.position = "fixed";
     waitingImg.style.top = `${startingR.top}px`;
     waitingImg.style.left = `${startingR.left}px`;

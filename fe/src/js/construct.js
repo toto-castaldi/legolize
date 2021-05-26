@@ -17,9 +17,10 @@ onEvent("animWaitingDone", async() => {
         y: 0
     }
     let transitionDelay = 3000;
+
     const fR = fileBrowseElement.getBoundingClientRect();
 
-    const render = document.getElementById("render");
+    const render = document.getElementById("app");
     const renderW = render.clientWidth;
     const renderH = render.clientHeight;
     const minRenderLen = (renderW > renderH ? renderH : renderW) * 0.9 * scale;
@@ -28,7 +29,7 @@ onEvent("animWaitingDone", async() => {
     const centerX = renderW / 2 + delta.x;
     const centerY = renderH / 2 + delta.y;
     const startX = centerX - (pictureW / 2) * elementLen;
-    const startY = centerY - (pictureW / 2) * elementLen;
+    const startY = centerY - (pictureH / 2) * elementLen;
 
     const placePiece = (piece) => {
         return new Promise((resolve) => {
@@ -57,7 +58,7 @@ onEvent("animWaitingDone", async() => {
             const tX = startX + piece.position[0] * elementLen - pR.left;
             const tY = startY + piece.position[1] * elementLen - pR.top;
             if (transitionDelay > 0) {
-                transitionDelay -= 200;
+                transitionDelay -= 300;
             }
             if (transitionDelay < 20) {
                 transitionDelay = 20;

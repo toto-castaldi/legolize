@@ -102,6 +102,12 @@ const enableElement = (element) => element.disabled = '';
 
 const store = () => theStore;
 
+const components = {
+    filePickerElement: document.getElementById("file-picker"),
+    sizeElement: document.getElementById("size"),
+    waitingImgElement: document.getElementById("waiting-img")
+}
+
 onWindowResize(() => {
     appW = appElement.clientWidth;
     appH = appElement.clientHeight;
@@ -113,4 +119,4 @@ window.onresize = () => {
     }
 }
 
-export { enableElement, store, addClass, apiThumbnailImage, removeClass, hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
+export { components, enableElement, store, addClass, apiThumbnailImage, removeClass, hide, disableElement, websocketUrl, get, post, put, del, apiWaitingImage, show, setHeight, setWidth, center, onWindowResize, minAppDimension, setUrl, postFormData, getWidth, getHeight, sendEvent, onEvent }
