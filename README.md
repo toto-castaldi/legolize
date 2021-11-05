@@ -1,8 +1,6 @@
 LEGOLIZE
 ========
 
-[ON LINE](https://legolize.skillbill.net)
-
 [![buddy pipeline](https://app.buddy.works/skillbill-bw/legolize/pipelines/pipeline/326415/badge.svg?token=107d3bbbb60ecabcdb08e0c4f842888977cc5d7b269e84936f8b8074747daf78 "buddy pipeline")](https://app.buddy.works/skillbill-bw/legolize/pipelines/pipeline/326415)
 
 
